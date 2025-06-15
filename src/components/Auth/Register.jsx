@@ -4,7 +4,7 @@ import bgImage from '../../assets/bg-login.png';
 import toast from 'react-hot-toast';
 import Swal from 'sweetalert2';
 
-export const Register = () => {
+export const Register = ({ onSwitch }) => {
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({
         nombre: '',
@@ -63,7 +63,7 @@ export const Register = () => {
 
             {/* Contenido encima */}
             <div className="relative z-10 flex flex-col items-center justify-center px-6 py-8 mx-auto min-h-screen">
-                <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+                <a href="/" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
                     <img className="bg-stone-50 rounded-xl w-40 h-40 mr-2 p-4" src={imageLogo} alt="logo" />
                 </a>
 
@@ -80,6 +80,9 @@ export const Register = () => {
                                     <Input name="apodo" label="Nickname" value={formData.apodo} onChange={handleChange} placeholder="JP" />
                                     <Input name="phone" onlyNumbers maxLength={8} label="Teléfono" value={formData.phone} onChange={handleChange} prefix="+502" placeholder="12345678" />
 
+                                    <p className="text-center text-sm font-light text-gray-500 dark:text-gray-400">
+                                        ¿Ya tienes cuenta? <a href="#" onClick={onSwitch} className="font-medium text-primary-600 hover:underline dark:text-primary-500">Iniciar sesión</a>
+                                    </p>
                                 </>
                             )}
 
@@ -123,12 +126,12 @@ export const Register = () => {
                                 )}
                                 {step === 3 && (
                                     <button type="submit" onClick={() => {
-                                            if (validateStep()) {
-                                                sweetAlert();
-                                            } else {
-                                                toast.error('Por favor completa todos los campos antes de continuar.');
-                                            }
-                                        }} className="ml-auto bg-green-700 hover:bg-emerald-400 text-white font-medium rounded-lg text-sm px-5 py-2.5">
+                                        if (validateStep()) {
+                                            sweetAlert();
+                                        } else {
+                                            toast.error('Por favor completa todos los campos antes de continuar.');
+                                        }
+                                    }} className="ml-auto bg-green-700 hover:bg-emerald-400 text-white font-medium rounded-lg text-sm px-5 py-2.5">
                                         Registrar
                                     </button>
                                 )}
