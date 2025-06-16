@@ -29,7 +29,7 @@ export const ProductModal = ({ product, onClose }) => {
           {/* Imagen */}
           <div className="w-full lg:w-1/2">
             <img
-              src={product.image}
+              src={`http://localhost:2003/images/productsImages/${product.image}`}
               alt={product.name}
               className="w-full h-[300px] object-cover rounded-lg"
             />
@@ -44,7 +44,7 @@ export const ProductModal = ({ product, onClose }) => {
               {product.description || 'Este producto es ideal para uso agrícola intensivo.'}
             </p>
             <p className="mt-2 text-gray-700">
-              <span className="font-semibold">Precio:</span> ${product.price.toFixed(2)}
+              <span className="font-semibold">Precio:</span> Q{product.price.toFixed(2)}
             </p>
             <p className="mt-2 text-gray-700">
               <span className="font-semibold">Peso:</span> {product.weight || '1 kg'}
@@ -53,7 +53,8 @@ export const ProductModal = ({ product, onClose }) => {
               <span className="font-semibold">Stock:</span> {product.stock || 'Disponible'}
             </p>
             <p className="mt-2 text-gray-700">
-              <span className="font-semibold">Proveedor:</span> {product.provider || 'AgroDistribuidor S.A.'}
+              <span className="font-semibold">Proveedor:</span> {product.provider?.name || 'AgroDistribuidor S.A.'}
+
             </p>
 
             {/* Acordeón para cantidad */}
