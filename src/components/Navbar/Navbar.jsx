@@ -38,7 +38,7 @@ const Navbar = () => {
                 </div>
 
                 <div className="items-center justify-between w-full lg:flex lg:w-auto lg:order-1" id="mobile-menu-2">
-                    <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
+                    <ul className="flex flex-col mt-5 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
                         <li>
                             <Link to="/" className="block py-2 pl-3 pr-4 text-white bg-green-700 rounded lg:bg-transparent lg:text-green-700 lg:p-0" aria-current="page">
                                 Home
@@ -50,15 +50,11 @@ const Navbar = () => {
                             </Link>
                         </li>
                         <li>
-                            <Link to="/catalog/products" className="block py-2 pl-3 pr-4 text-gray-700 hover:text-green-700 lg:p-0">
+                            <Link to="/catalog" className="block py-2 pl-3 pr-4 text-gray-700 hover:text-green-700 lg:p-0">
                                 Marketplace
                             </Link>
                         </li>
-                        <li>
-                            <Link to="/features" className="block py-2 pl-3 pr-4 text-gray-700 hover:text-green-700 lg:p-0">
-                                Features
-                            </Link>
-                        </li>
+                       
                         <li>
                             <Link to="/team" className="block py-2 pl-3 pr-4 text-gray-700 hover:text-green-700 lg:p-0">
                                 Team
