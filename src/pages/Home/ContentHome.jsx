@@ -1,9 +1,17 @@
 import { ChartColumnBig, Package, Store } from 'lucide-react';
 import React from 'react';
+import { Link } from 'react-router-dom';
+
 import imgHomeOne from '../../assets/bg-home-2.png';
 
 
 const ContentHome = () => {
+    
+    const handleButtonProducts = ()=>{
+        <Link to="/catalog" />
+    }
+
+
     return (
         <div>
             {/* Sección de bienvenida */}
@@ -12,7 +20,9 @@ const ContentHome = () => {
                     <h1 className="text-4xl md:text-6xl font-bold mb-6">¡Impulsamos el futuro de los Agricultores!</h1>
                     <p className="text-xl md:text-2xl mb-12">Conectamos agricultores, proveedores y compradores en un solo lugar.</p>
                     <div className="flex flex-col md:flex-row justify-center gap-4">
-                        <button className="bg-white text-green-800 px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition duration-300">Ver Productos</button>
+                        <Link to="/catalog">
+                            <button  className="bg-white text-green-800 px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition duration-300">Ver Productos</button>
+                        </Link>
                         <button className="border-2 border-white text-white px-8 py-3 rounded-full font-bold hover:bg-white hover:text-green-800 transition duration-300">Ver Blog</button>
                     </div>
                 </div>
