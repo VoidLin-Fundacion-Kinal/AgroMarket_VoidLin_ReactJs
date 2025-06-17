@@ -37,13 +37,15 @@ export const getProductsRequest = async () => {
 }
 
 export const getPostsRequest = async () => {
-    try {
-        const response = await apiClient.get('/post/listPost')
-        console.log(response.data);
-        
-        return response.data
-    } catch (error) {
-        console.error("Error fetching posts:", error);
-        throw error;
-    }
+  try {
+    const response = await apiClient.get('/post/listPost');
+    console.log("Respuesta completa desde Axios:", response);
+    console.log("Data:", response.data);
+
+    return response.data; // Esto debería ser el objeto con { success, message, post }
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    throw error;
+  }
 }
+
