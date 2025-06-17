@@ -3,41 +3,42 @@ import { getPostsRequest } from "../services/api.js";
 import { useState } from "react";
 
 export const usePosts = () => {
-    const [posts, setPosts] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+  const [posts, setPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-    const getPosts = async () => {
-        setIsLoading(true);
+  const getPosts = async () => {
+    setIsLoading(true);
 
-        try {
-            const response = await getPostsRequest();
+    try {
+      const response = await getPostsRequest();
 
-            if (!response || !response.data || !response.data.success) {
-                Swal.fire({
-                    title: 'Error',
-                    text: response?.data?.message || 'Error desconocido al obtener los posts.',
-                    icon: 'error',
-                    confirmButtonText: 'Aceptar'
-                });
-                return;
-            }
 
-            setPosts(response.data.post || []);
+      if (!response || !response.success) {
+        Swal.fire({
+          title: 'Error',
+          text: response?.message || 'Error desconocido al obtener los posts.',
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
+        return;
+      }
 
-        } catch (error) {
-            console.error("Error fetching posts:", error);
-            Swal.fire({
-                title: 'Error',
-                text: 'No se pudieron cargar los posts. Inténtalo más tarde.',
-                icon: 'error',
-                confirmButtonText: 'Aceptar'
-            });
-        } finally {
-            setIsLoading(false);
-        }
-    };
+      setPosts(response.post || []);
 
-    return { posts, isLoading, getPosts };
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+      Swal.fire({
+        title: 'Error',
+        text: 'No se pudieron cargar los posts. Inténtalo más tarde.',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return { posts, isLoading, getPosts };
 };
 
 export default usePosts;
