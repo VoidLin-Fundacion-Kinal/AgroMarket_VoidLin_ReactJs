@@ -1,6 +1,6 @@
 "use client"
 
-const PostModal = ({ post, onClose }) => {
+const BlogModal = ({ post, onClose }) => {
   if (!post) return null
 
   const baseURL = "http://localhost:2003/images/postImages/"
@@ -200,4 +200,4 @@ const PostModal = ({ post, onClose }) => {
   )
 }
 
-export default PostModal
+export default BlogModal
