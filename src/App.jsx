@@ -7,6 +7,8 @@ import Team from './pages/Team/Team.jsx';
 import Contact from './pages/Contact/Contact.jsx';
 import ContentHome from './pages/Home/ContentHome.jsx';
 import BlogSection from './pages/Blog/Blog.jsx';
+import Cart from './pages/Cart/Cart.jsx';
+import Blog from './pages/Blog/Blog.jsx';
 
 function App() {
   return (
@@ -18,7 +20,8 @@ function App() {
         <Route path="catalog" element={<CatalogProducts />} />
         <Route path="team" element={<Team />} />
         <Route path="contact" element={<Contact />} />
-        <Route path="blog" element={<BlogSection />} />
+        <Route path="blog" element={<Blog />} />
+        <Route path='cart' element={<Cart />} />
       </Route>
 
       {/* Rutas sin layout (como login/register) */}
