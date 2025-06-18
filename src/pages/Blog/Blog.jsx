@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { usePosts } from './../../hooks/usePosts';
-import PostCard from './../../components/Card/BlogCard';
-import PostModal from './../../components/Modal/BlogModal';
+import BlogModal from './../../components/Modal/BlogModal';
+import BlogCard from './../../components/Card/BlogCard';
 
 const Blog = () => {
   const { posts, isLoading, getPosts } = usePosts();
@@ -40,7 +40,7 @@ const Blog = () => {
         ) : posts && posts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {posts.map((post) => (
-              <PostCard key={post._id} post={post} onClick={() => openModal(post)} />
+              <BlogCard key={post._id} post={post} onClick={() => openModal(post)} />
             ))}
           </div>
         ) : (
@@ -49,7 +49,7 @@ const Blog = () => {
       </section>
 
       {/* Modal de Detalles */}
-      {selectedPost && <PostModal post={selectedPost} onClose={closeModal} />}
+      {selectedPost && <BlogModal post={selectedPost} onClose={closeModal} />}
     </main>
   );
 };
