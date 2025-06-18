@@ -11,7 +11,7 @@ export const usePosts = () => {
 
     try {
       const response = await getPostsRequest();
-
+      
 
       if (!response || !response.success) {
         Swal.fire({
@@ -23,7 +23,7 @@ export const usePosts = () => {
         return;
       }
 
-      setPosts(response.post || []);
+      setPosts(response.posts || []);
 
     } catch (error) {
       console.error("Error fetching posts:", error);
