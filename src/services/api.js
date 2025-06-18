@@ -7,6 +7,15 @@ const apiClient = axios.create(
     }
 )
 
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token"); // o donde guardes tu token
+  if (token) {
+    config.headers.Authorization = token; // así lo espera tu backend
+  }
+  return config;
+});
+
+
 export const loginRequest = async(userData) =>{
     try {
         const response = await apiClient.post('/auth/login', userData);
@@ -28,7 +37,7 @@ export const registerRequest = async (user) => {
 
 export const getProductsRequest = async () => {
     try {
-        const response = await apiClient.get('/product/listProducts')
+        const response = await apiClient.get('/product/listProductActive')
         return response.data
     } catch (error){
         console.error("Error fetching products:", error);
@@ -38,7 +47,7 @@ export const getProductsRequest = async () => {
 
 export const getPostsRequest = async () => {
   try {
-    const response = await apiClient.get('/post/listPost');
+    const response = await apiClient.get('/post/listPostActive');
     console.log("Respuesta completa desde Axios:", response);
     console.log("Data:", response.data);
 
@@ -49,3 +58,29 @@ export const getPostsRequest = async () => {
   }
 }
 
+export const postCartProductRequest = async (productId, quantity) => {
+  try {
+    const token = localStorage.getItem('token');
+
+    const response = await apiClient.post(
+      '/cart/addCart',
+      { productId, quantity },
+      {
+        headers: {
+          Authorization: `${token}`,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error('Error al agregar producto al carrito:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
+export const getUserCart = async () => {
+  const response = await API.get('/cart/listCartUserById'); // Ruta que mapea a listCartUserById
+  return response.data.cart;
+}
