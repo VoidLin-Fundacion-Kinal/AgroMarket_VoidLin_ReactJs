@@ -1,39 +1,79 @@
-// hooks/useCart.js
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { getUserCart } from '../services/api';
+import { useEffect, useState } from "react"
+import { getListCart, deleteProductFromCart, postCartProductRequest } from "./../services/api.js"
+import Swal from "sweetalert2"
 
-const useCart = () => {
-  const [cart, setCart] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+export const useCart = () => {
+  const [cart, setCart] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   const fetchCart = async () => {
-    try {
-      setLoading(true);
-      const response = await getUserCart();
+  try {
+    setLoading(true)
+    const res = await getListCart()
 
-      if (response.data.success) {
-        setCart(response.data.cart);
-      } else {
-        setCart(null);
-        setError('Cart not found');
-      }
-
-
-    } catch (err) {
-      console.error(err);
-      setError('Error fetching cart');
-    } finally {
-      setLoading(false);
+    // Si no hay carrito, asumir que está vacío
+    if (!res || !Array.isArray(res.items) || res.items.length === 0) {
+      setCart({ items: [] })  // carrito vacío pero válido
+    } else {
+      setCart(res)
     }
-  };
+
+    setError(null)
+  } catch (err) {
+    if (err.response?.status === 404) {
+      setCart({ items: [] })  
+      setError(null)          
+    } else {
+      setCart(null)
+      const message = err.response?.data?.message || err.message || "Error al cargar el carrito"
+      setError(message)
+    }
+  } finally {
+    setLoading(false)
+  }
+}
 
   useEffect(() => {
-    fetchCart();
-  }, []);
+    fetchCart()
+  }, [])
 
-  return { cart, loading, error, refresh: fetchCart };
-};
+  const removeProduct = async (productId) => {
+    const confirm = await Swal.fire({
+      title: "¿Estás seguro?",
+      text: "Esta acción eliminará el producto del carrito.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar"
+    })
 
-export default useCart;
+    if (!confirm.isConfirmed) return { success: false, message: "Cancelado por usuario" }
+
+    try {
+      const res = await deleteProductFromCart(productId)
+      Swal.fire("Eliminado", res.message || "Producto eliminado del carrito", "success")
+      await fetchCart()
+      return { success: true, message: res.message || "Producto eliminado correctamente" }
+    } catch (err) {
+      const message = err.response?.data?.message || err.message || "No se pudo eliminar el producto"
+      Swal.fire("Error", message, "error")
+      return { success: false, message }
+    }
+  }
+
+  const addProduct = async (productId) => {
+    try {
+      const res = await postCartProductRequest(productId)
+      Swal.fire("Agregado", res.message || "Producto agregado al carrito", "success")
+      await fetchCart()
+      return { success: true }
+    } catch (err) {
+      const message = err.response?.data?.message || err.message || "No se pudo agregar el producto"
+      Swal.fire("Error", message, "error")
+      return { success: false, message }
+    }
+  }
+
+  return { cart, loading, error, removeProduct, addProduct }
+}
