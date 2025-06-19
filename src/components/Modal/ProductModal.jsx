@@ -34,13 +34,14 @@ export const ProductModal = ({ product, onClose }) => {
         onClose(); // opcional: cerrar modal tras agregar
       }
     } catch (error) {
-      console.log(error);
-      
+      const message =
+        error.response?.data?.message || error.message || 'No se pudo agregar el producto';
+
       Swal.fire({
         title: 'Error',
-        text: error.response?.data?.message || 'Ocurrió un error al agregar al carrito',
+        text: message,
         icon: 'error',
-        confirmButtonText: 'OK',
+        confirmButtonText: 'Aceptar',
       });
     }
   };
@@ -256,8 +257,8 @@ export const ProductModal = ({ product, onClose }) => {
                               key={qty}
                               onClick={() => handleQtyClick(qty)}
                               className={`relative py-2 sm:py-3 px-2 rounded-lg sm:rounded-xl border-2 text-sm font-bold transition-all duration-200 transform hover:scale-105 ${selectedQty === qty
-                                  ? "bg-gradient-to-br from-green-500 to-emerald-500 text-white border-green-600 shadow-lg scale-105"
-                                  : "bg-white text-green-700 border-green-300 hover:bg-green-50 hover:border-green-400 shadow-sm"
+                                ? "bg-gradient-to-br from-green-500 to-emerald-500 text-white border-green-600 shadow-lg scale-105"
+                                : "bg-white text-green-700 border-green-300 hover:bg-green-50 hover:border-green-400 shadow-sm"
                                 }`}
                             >
                               {qty}
