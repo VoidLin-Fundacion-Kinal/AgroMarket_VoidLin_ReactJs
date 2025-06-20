@@ -2,13 +2,16 @@
 
 import { useEffect, useState } from "react"
 import { Delete, Edit } from "lucide-react"
-import { getProductsAll, softDeleteProduct } from "../../services/api" // ajusta la ruta según tu estructura
+import { getProductsAll, softDeleteProduct } from "../../services/api"
 import Swal from "sweetalert2"
 import AddProductModal from './../Modal/addProductModal'
+import UpdateProductModal from './../Modal/updateProductModal' // Importa el nuevo componente
 
 const ProductTables = () => {
   const [products, setProducts] = useState([])
-  const [showModal, setShowModal] = useState(false)
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [showUpdateModal, setShowUpdateModal] = useState(false)
+  const [selectedProduct, setSelectedProduct] = useState(null)
 
   const columns = ["Nombre", "Descripcion", "Precio", "Peso", "stock", "Proveedor", "Categoria", "Estado", "Acciones"]
 
@@ -47,6 +50,11 @@ const ProductTables = () => {
     }
   }
 
+  const handleEdit = (product) => {
+    setSelectedProduct(product)
+    setShowUpdateModal(true)
+  }
+
   return (
     <div className="flex flex-col bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
       {/* Header de la tabla */}
@@ -57,8 +65,7 @@ const ProductTables = () => {
             <p className="text-sm text-gray-600 mt-1">Lista completa de productos en inventario</p>
           </div>
           <button
-            onClick={() => setShowModal(true)}
-
+            onClick={() => setShowAddModal(true)}
             className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition-all duration-200 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -66,15 +73,22 @@ const ProductTables = () => {
             </svg>
             Crear Producto
           </button>
-          <AddProductModal
-            showModal={showModal}
-            setShowModal={setShowModal}
-            setProducts={setProducts}
-          />
         </div>
       </div>
 
-
+      {/* Modales */}
+      <AddProductModal
+        showModal={showAddModal}
+        setShowModal={setShowAddModal}
+        setProducts={setProducts}
+      />
+      
+      <UpdateProductModal
+        showModal={showUpdateModal}
+        setShowModal={setShowUpdateModal}
+        setProducts={setProducts}
+        productToEdit={selectedProduct}
+      />
 
       <div className="overflow-x-auto">
         <div className="min-w-full inline-block align-middle">
@@ -150,7 +164,10 @@ const ProductTables = () => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
-                        <button className="p-2.5 rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 transition-all duration-200 hover:shadow-md group">
+                        <button 
+                          onClick={() => handleEdit(product)}
+                          className="p-2.5 rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 transition-all duration-200 hover:shadow-md group"
+                        >
                           <Edit className="w-4 h-4" />
                         </button>
                         <button
@@ -158,22 +175,6 @@ const ProductTables = () => {
                           className="p-2.5 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 transition-all duration-200 hover:shadow-md group"
                         >
                           <Delete className="w-4 h-4" />
-                        </button>
-                        <button className="p-2.5 rounded-xl bg-gray-50 text-gray-600 hover:bg-gray-100 hover:text-gray-700 transition-all duration-200 hover:shadow-md group">
-                          <svg
-                            width="16"
-                            height="16"
-                            viewBox="0 0 20 20"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              className="stroke-current"
-                              d="M10.0161 14.9897V15.0397M10.0161 9.97598V10.026M10.0161 4.96231V5.01231"
-                              strokeWidth="2.5"
-                              strokeLinecap="round"
-                            />
-                          </svg>
                         </button>
                       </div>
                     </td>
