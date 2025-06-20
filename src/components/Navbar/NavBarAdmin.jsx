@@ -24,10 +24,15 @@ const NavBarAdmin = () => {
   const [activeDropdown, setActiveDropdown] = useState(null)
 
   const handleNavigateToPage = (page) => {
-    navigate("/dashboardAdmin" + page)
-    setIsMobileMenuOpen(false)
-    setActiveDropdown(null)
+  if (page === "/home" || page === "/") {
+    navigate(page)
+  } else {
+    navigate("/dashboardAdmin" + page) 
   }
+
+  setIsMobileMenuOpen(false)
+  setActiveDropdown(null)
+}
 
   const isActivePage = (page) => {
     return location.pathname === `/dashboardAdmin${page}`
@@ -51,7 +56,6 @@ const NavBarAdmin = () => {
     { name: "Providers", path: "/providers", icon: Truck },
     { name: "Categories", path: "/categories", icon: TableOfContents },
     { name: "Users", path: "/user", icon: Users },
-    { name: "Inventory", path: "/inventory", icon: FileBox },
     { name: "Invoices", path: "/invoices", icon: Receipt },
     { name: "Carts", path: "/carts", icon: ShoppingCart },
     { name: "Blog", path: "/blog", icon: MessageSquareText },
