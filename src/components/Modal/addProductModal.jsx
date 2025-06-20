@@ -51,6 +51,11 @@ const AddProductModal = ({ showModal, setShowModal, setProducts }) => {
     fetchData()
   }, [showModal])
 
+  const handleEditProduct = (product) => {
+    setProductToEdit(product);
+    setShowUpdateModal(true);
+  };
+
   const handleCreateProduct = async (e) => {
     e.preventDefault()
     if (!selectedCategory || !selectedProvider) {
@@ -69,7 +74,7 @@ const AddProductModal = ({ showModal, setShowModal, setProducts }) => {
         Swal.fire("Producto creado", "El producto se ha guardado correctamente", "success")
         setShowModal(false)
         setProducts((prev) => [...prev, data.product])
-        // Reset form
+
         e.target.reset()
         setSelectedCategory(null)
         setSelectedProvider(null)
@@ -77,11 +82,27 @@ const AddProductModal = ({ showModal, setShowModal, setProducts }) => {
         Swal.fire("Error", data.message || "No se pudo crear el producto", "error")
       }
     } catch (error) {
-      Swal.fire("Error", "Ocurrió un error al crear el producto", "error")
+      const backendErrors = error.response?.data?.errors;
+
+      if (backendErrors && backendErrors.length > 0) {
+        const errorMessages = backendErrors.map(err =>
+          `<b> Message:</b> ${err.message}`
+        ).join('<br><br>');
+
+        Swal.fire({
+          title: 'Errores de validación',
+          html: `${errorMessages}</div>`,
+          icon: 'error'
+        });
+      } else {
+        Swal.fire("Error", error.response?.data?.message || "Error desconocido", "error");
+      }
     } finally {
       setLoading(false)
     }
   }
+
+
 
   if (!showModal) return null
 
@@ -228,9 +249,8 @@ const AddProductModal = ({ showModal, setShowModal, setProducts }) => {
                             <button
                               key={prov._id}
                               type="button"
-                              className={`w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors duration-150 flex items-center justify-between ${
-                                selectedProvider?._id === prov._id ? "bg-blue-100 text-blue-900" : "text-gray-700"
-                              }`}
+                              className={`w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors duration-150 flex items-center justify-between ${selectedProvider?._id === prov._id ? "bg-blue-100 text-blue-900" : "text-gray-700"
+                                }`}
                               onClick={() => {
                                 setSelectedProvider(prov)
                                 setOpenProvider(false)
@@ -276,9 +296,8 @@ const AddProductModal = ({ showModal, setShowModal, setProducts }) => {
                             <button
                               key={cat._id}
                               type="button"
-                              className={`w-full text-left px-4 py-3 hover:bg-purple-50 transition-colors duration-150 flex items-center justify-between ${
-                                selectedCategory?._id === cat._id ? "bg-purple-100 text-purple-900" : "text-gray-700"
-                              }`}
+                              className={`w-full text-left px-4 py-3 hover:bg-purple-50 transition-colors duration-150 flex items-center justify-between ${selectedCategory?._id === cat._id ? "bg-purple-100 text-purple-900" : "text-gray-700"
+                                }`}
                               onClick={() => {
                                 setSelectedCategory(cat)
                                 setOpenCategory(false)
