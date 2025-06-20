@@ -13,11 +13,11 @@ import ProductTables from './components/Tables/ProductTables.jsx';
 import ProviderTables from './components/Tables/ProvidersTables.jsx';
 import CategoriesTables from './components/Tables/CategoriesTables.jsx';
 import UsersTables from './components/Tables/UsersTables.jsx';
-import InventoryTables from './components/Tables/InventoryTables.jsx';
 import InvoicesTables from './components/Tables/InvoicesTables.jsx';
 import CartsTables from './components/Tables/CartsTables.jsx';
 import BlogTables from './components/Tables/BlogTables.jsx';
 import ContentHomeDashAdmin from './pages/Home/ContentHomeDashAdmin.jsx';
+import Dashboard from './pages/Dashboard.jsx';
 
 
 
@@ -35,6 +35,7 @@ function App() {
           <Route path="contact" element={<Contact />} />
           <Route path="blog" element={<Blog />} />
           <Route path="cart" element={<Cart />} />
+          <Route path='DashboardUser' element={<Dashboard />} />
         </Route>
 
         {/* Rutas de autenticación */}
@@ -45,21 +46,17 @@ function App() {
         {/* Dashboard admin */}
         <Route path="/dashboardAdmin" element={<Layout2 />}>
           <Route index element={<ContentHomeDashAdmin />} />
-
-          <Route path='home' element={<ContentHomeDashAdmin/>}/>
           <Route path='products' element={<ProductTables/>}/>
           <Route path='providers' element={<ProviderTables/>}/>
           <Route path='categories' element={<CategoriesTables/>}/>
           <Route path='user' element={<UsersTables/>}/>
-          <Route path='inventory' element={<InventoryTables/>}/>
           <Route path='invoices' element={<InvoicesTables />}/>
           <Route path='carts' element={<CartsTables />}/>
           <Route path='blog' element={<BlogTables />}/>
+        </Route>
 
-
-
-
-
+        {/* Dashboard user */}
+        <Route>
 
 
         </Route>
