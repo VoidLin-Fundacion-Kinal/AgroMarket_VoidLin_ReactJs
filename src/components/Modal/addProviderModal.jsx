@@ -13,7 +13,6 @@ const AddProviderModal = ({ showModal, setShowModal, setProviders }) => {
   const handleImageChange = (e) => {
     const file = e.target.files[0]
     if (file) {
-      // Validar tamaño del archivo (5MB máximo)
       if (file.size > 5 * 1024 * 1024) {
         Swal.fire("Error", "El archivo es demasiado grande. Máximo 5MB.", "error")
         return
@@ -39,7 +38,7 @@ const AddProviderModal = ({ showModal, setShowModal, setProviders }) => {
   const removeImage = () => {
     setSelectedImage(null)
     setImagePreview(null)
-    // Limpiar el input file
+    
     const fileInput = document.querySelector('input[name="providerLogo"]')
     if (fileInput) {
       fileInput.value = ""
@@ -47,30 +46,37 @@ const AddProviderModal = ({ showModal, setShowModal, setProviders }) => {
   }
 
   const handleCreateProvider = async (e) => {
-    e.preventDefault()
-    const formData = new FormData(e.target)
+    e.preventDefault();
+    const formData = new FormData(e.target);
 
     try {
-      setLoading(true)
-      const data = await createProvider(formData)
+        setLoading(true);
+        const response = await createProvider(formData);
 
-      if (data.success) {
-        Swal.fire("Proveedor creado", "El proveedor se ha guardado correctamente", "success")
-        setShowModal(false)
-        setProviders((prev) => [...prev, data.provider])
-        // Reset form y estados
-        e.target.reset()
-        setSelectedImage(null)
-        setImagePreview(null)
-      } else {
-        Swal.fire("Error", data.message || "No se pudo crear el proveedor", "error")
-      }
+        if (response.success) {
+            Swal.fire("Éxito", "Proveedor creado correctamente", "success");
+        }
+
     } catch (error) {
-      Swal.fire("Error", "Ocurrió un error al crear el proveedor", "error")
+        const backendErrors = error.response?.data?.errors;
+        
+        if (backendErrors && backendErrors.length > 0) {
+            const errorMessages = backendErrors.map(err => 
+                `<b> Message:</b> ${err.message}`
+            ).join('<br><br>');
+            
+            Swal.fire({
+                title: 'Errores de validación',
+                html: `${errorMessages}</div>`,
+                icon: 'error'
+            });
+        } else {
+            Swal.fire("Error", error.response?.data?.message || "Error desconocido", "error");
+        }
     } finally {
-      setLoading(false)
+        setLoading(false);
     }
-  }
+};
 
   if (!showModal) return null
 
