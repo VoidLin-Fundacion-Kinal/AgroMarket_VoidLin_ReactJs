@@ -31,7 +31,7 @@ export const ProductModal = ({ product, onClose }) => {
           confirmButtonText: 'Aceptar',
         });
 
-        onClose(); // opcional: cerrar modal tras agregar
+        onClose(); 
       }
     } catch (error) {
       const message =
