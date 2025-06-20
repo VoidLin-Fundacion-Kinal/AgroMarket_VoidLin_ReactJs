@@ -104,6 +104,18 @@ export const getListCart = async () => {
   }
 };
 
+export const getListCartIdNew = async () => {
+  try {
+    const response = await apiClient.get('/cart/listCartUserByIdNew');
+    console.log('Carts:', response);
+
+    return response.data.cart;
+  } catch (error) {
+    console.error('Error al obtener el carrito:', error);
+    throw error;
+  }
+};
+
 export const deleteProductFromCart = async (productId) => {
   try {
     const response = await apiClient.post(`/cart/deleteProductCart`, { productId }, {
@@ -317,7 +329,8 @@ export const createProvider = async (formData) => {
     })
     return response.data
   } catch (error) {
-    console.error("Error al crear proveedor:", error)
+    Swal.fire("Error al crear proveedor:", error.response?.data || error.message)
+
     throw error
   }
 }
@@ -332,6 +345,129 @@ export const createCategory = async (formData) => {
   }
 }
 
+export const updateProduct = async (productId, formData) => {
+  try {
+    const response = await apiClient.put(`/product/updateProduct/${productId}`, formData)
+    return response.data;
+  } catch (error) {
+    console.error("Error updating product:", error);
+    throw error;
+  }
+};
+
+export const updateCategory = async (catogoryId, formData) => {
+  try {
+    const response = await apiClient.put(`/category/updateCategory/${catogoryId}`, formData)
+    return response.data;
+  } catch (error) {
+    console.error("Error updating category:", error);
+    throw error;
+  }
+};
+
+export const updateProvider = async (providerId, formData) => {
+  try {
+    const response = await apiClient.put(`/provider/updateProvider/${providerId  }`, formData)
+    return response.data;
+  } catch (error) {
+    console.error("Error updating provider:", error);
+    throw error;
+  }
+};
+
+
+export const createInventoryMovement = async (invetoryId, formData) => {
+  try {
+    const response = await apiClient.put(`/inventory/addInventoryMovement/${invetoryId  }`, formData)
+    return response.data;
+  } catch (error) {
+    console.error("Error updating provider:", error);
+    throw error;
+  }
+};
+
+
+
+export const updateUser = async (formData) => {
+  const token = localStorage.getItem("token");
+  const response = await apiClient.put('/user/updateUser', formData, {
+    headers: {
+      Authorization: token, // ✅ sin 'Bearer'
+    }
+  });
+  return response.data;
+};
+
+
+export const updatePassword = async (formData) => {
+  const token = localStorage.getItem("token");
+  const response = await apiClient.put('/user/updatePassword', formData, {
+    headers: {
+      Authorization: token, // ✅ sin 'Bearer'
+    }
+  });
+  return response.data;
+};
+
+
+
+export const getUserRequest = async () => {
+  try {
+    const response = await apiClient.get("/user/listUserById/");
+    console.log("Respuesta completa desde Axios:", response);
+    console.log("Data:", response.data.User);
+    return response.data.User;
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    throw error;
+  }
+};
+
+export const updateUserLogo = async (formData) => {
+  const token = localStorage.getItem("token");
+  const response = await apiClient.put("/user/updateProfilePhone", formData, {
+    headers: {
+      Authorization: token,
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response.data;
+};
+
+
+
+
+export const fetchUserPosts = async () => {
+  
+  const response = await apiClient.get('/post/listPostsUser/');
+  return response.data.posts;
+};
+
+export const getUserCart = async () => {
+   const response = await apiClient.get('/cart/listCartUserById');
+  return response.data;
+};
+
+export const getBillsByUser = async () => {
+  const response = await apiClient.get('/bill/getBillsByUserId');
+  return response.data;
+};
+
+
+export const createPost = async (formData) => {
+  try {
+    const response = await apiClient.post('/post/addPost', formData, {
+      headers: {
+        // ❌ No pongas esto manualmente
+        // 'Content-Type': 'multipart/form-data', <-- elimina esta línea
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('API error:', error);
+    throw error; // ✅ Propaga el error al hook/componente
+  }
+};
 
 
 
