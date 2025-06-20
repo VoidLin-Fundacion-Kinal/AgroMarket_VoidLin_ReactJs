@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { getListCart, deleteProductFromCart, postCartProductRequest } from "./../services/api.js"
+import { getListCart, deleteProductFromCart, postCartProductRequest } from "./../services/api"
 import Swal from "sweetalert2"
 
 export const useCart = () => {
