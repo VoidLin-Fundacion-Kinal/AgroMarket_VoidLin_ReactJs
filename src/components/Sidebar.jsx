@@ -1,21 +1,34 @@
-// src/components/Sidebar.jsx
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-const Sidebar = ({ onMenuClick }) => {
+const Sidebar = () => {
   return (
     <div className="w-2/12 mr-6">
       <div className="bg-white rounded-xl shadow-lg mb-6 px-6 py-4">
-        <MenuItem icon="dashboard" text="Home" onClick={() => onMenuClick('home')} />
-        <MenuItem icon="tune" text="Cart" onClick={() => onMenuClick('cart')} />
-        <MenuItem icon="file_copy" text="Bills" onClick={() => onMenuClick('bills')} />
+        
+        <Link to="/account/settings">
+          <MenuItem icon="home" text="Home" />
+        </Link>
+
+        <Link to="/account/settings/cartUser">
+          <MenuItem icon="shopping_cart" text="Cart"  />
+        </Link>
+
+        <Link to="/account/settings/bills">
+          <MenuItem icon="receipt" text="Bills"  />
+        </Link>
 
       </div>
 
       <div className="bg-white rounded-xl shadow-lg mb-6 px-6 py-4">
-        <MenuItem icon="face" text="Edit Profile" onClick={() => onMenuClick('edit')} />
-        <MenuItem icon="settings" text="New Post" onClick={() => onMenuClick('newpost')} />
+        <Link to="/account/settings/edit">
+          <MenuItem icon="face" text="Edit Profile" />
+        </Link>
+        
+        <Link to="/account/settings/newpost">
+          <MenuItem icon="add" text="New Post" />
+        </Link>
 
-        <MenuItem icon="power_settings_new" text="Log out" />
       </div>
     </div>
   );
