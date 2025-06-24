@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { getListCart, deleteProductFromCart, postCartProductRequest } from "./../services/api"
+import { getListCart, deleteProductFromCart, postCartProductRequest, updateCartProductRequest } from "./../services/api"
 import Swal from "sweetalert2"
 
 export const useCart = () => {
@@ -8,31 +8,30 @@ export const useCart = () => {
   const [error, setError] = useState(null)
 
   const fetchCart = async () => {
-  try {
-    setLoading(true)
-    const res = await getListCart()
+    try {
+      setLoading(true)
+      const res = await getListCart()
 
-    // Si no hay carrito, asumir que está vacío
-    if (!res || !Array.isArray(res.items) || res.items.length === 0) {
-      setCart({ items: [] })  // carrito vacío pero válido
-    } else {
-      setCart(res)
-    }
+      if (!res || !Array.isArray(res.items) || res.items.length === 0) {
+        setCart({ items: [] })
+      } else {
+        setCart(res)
+      }
 
-    setError(null)
-  } catch (err) {
-    if (err.response?.status === 404) {
-      setCart({ items: [] })  
-      setError(null)          
-    } else {
-      setCart(null)
-      const message = err.response?.data?.message || err.message || "Error al cargar el carrito"
-      setError(message)
+      setError(null)
+    } catch (err) {
+      if (err.response?.status === 404) {
+        setCart({ items: [] })
+        setError(null)
+      } else {
+        setCart(null)
+        const message = err.response?.data?.message || err.message || "Error al cargar el carrito"
+        setError(message)
+      }
+    } finally {
+      setLoading(false)
     }
-  } finally {
-    setLoading(false)
   }
-}
 
   useEffect(() => {
     fetchCart()
@@ -75,5 +74,20 @@ export const useCart = () => {
     }
   }
 
-  return { cart, loading, error, removeProduct, addProduct }
+  const updateQuantity = async (productId, quantity) => {
+    try {
+      const res = await updateCartProductRequest(productId, quantity)
+      Swal.fire("Actualizado", res.message || "Cantidad actualizada en el carrito", "success")
+      await fetchCart()
+      return { success: true }
+    } catch (err) {
+      const message = err.response?.data?.message || err.message || "No se pudo actualizar la cantidad"
+      Swal.fire("Error", message, "error")
+      return { success: false, message }
+    }
+  }
+
+
+
+  return { cart, loading, error, removeProduct, addProduct, updateQuantity }
 }
