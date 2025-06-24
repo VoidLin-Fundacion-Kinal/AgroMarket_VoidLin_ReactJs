@@ -5,7 +5,8 @@ import { useCart } from "./../../hooks/useCart"
 import { Link, useNavigate } from "react-router-dom"
 import Swal from "sweetalert2"
 import { getBill } from "../../services/api"
-import CartProductCard from "../../components/Card/CardProductCard"
+import CartProductCard from "../../components/Card/CartProductCard"
+import { ShoppingCartIcon } from "lucide-react"
 
 const Cart = () => {
     const { cart, loading, error, removeProduct } = useCart()
@@ -98,13 +99,7 @@ const Cart = () => {
             <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
                     <div className="mx-auto h-24 w-24 text-gray-400 mb-4">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path
-                                strokeLinecap="round"
-                                strokeWidth={2}
-                                d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-4 0v-6m4 0V9a2 2 0 10-4 0v4.01"
-                            />
-                        </svg>
+                        <ShoppingCartIcon className="w-24 h-24" />
                     </div>
                     <h2 className="text-2xl font-bold text-gray-900 mb-2">Tu carrito está vacío</h2>
                     <p className="text-gray-600 mb-6">¡Agrega algunos productos para comenzar!</p>
@@ -191,13 +186,10 @@ const Cart = () => {
                                         <span className="text-gray-600">Subtotal</span>
                                         <span className="font-semibold">Q{total.toFixed(2)}</span>
                                     </div>
-                                    <div className="flex justify-between text-sm">
-                                        <span className="text-gray-600">Envío</span>
-                                        <span className="font-semibold text-green-600">Gratis</span>
-                                    </div>
+                               
                                     <div className="flex justify-between text-sm">
                                         <span className="text-gray-600">Impuestos</span>
-                                        <span className="font-semibold">Q{(total * 0.1).toFixed(2)}</span>
+                                        <span className="font-semibold">Q{(total * 0.12).toFixed(2)}</span>
                                     </div>
                                 </div>
 
@@ -205,19 +197,12 @@ const Cart = () => {
 
                                 <div className="flex justify-between items-center mb-6">
                                     <span className="text-lg font-semibold text-gray-900">Total</span>
-                                    <span className="text-2xl font-bold text-gray-900">Q{(total + total * 0.1).toFixed(2)}</span>
+                                    <span className="text-2xl font-bold text-gray-900">Q{(total + total * 0.12).toFixed(2)}</span>
                                 </div>
 
                                 <div className="space-y-3">
                                     <button onClick={handleCheckout} className="w-full bg-green-600 text-white py-3 px-4 rounded-xl hover:bg-green-700 transition-colors flex items-center justify-center gap-2 font-semibold">
-                                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-                                            />
-                                        </svg>
+                                        <ShoppingCartIcon className="w-5 h-5" />
                                         Finalizar Compra
                                     </button>
 
@@ -229,11 +214,7 @@ const Cart = () => {
                                     </Link>
                                 </div>
 
-                                <div className="mt-6 p-4 bg-green-50 rounded-lg">
-                                    <p className="text-sm text-green-800">
-                                        <span className="font-semibold">🚚 Envío gratis</span> en pedidos superiores a Q50
-                                    </p>
-                                </div>
+                                
                             </div>
                         </div>
                     </div>
