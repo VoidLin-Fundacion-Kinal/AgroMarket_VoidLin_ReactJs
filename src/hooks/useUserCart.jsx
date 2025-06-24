@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getListCartIdNew } from '../services/api';
+import { getListCartByUser, updateCartProductRequest } from '../services/api';
 
 const useUserCart = () => {
   const [cart, setCart] = useState([]);
@@ -8,15 +8,40 @@ const useUserCart = () => {
 
   const fetchCart = async () => {
     try {
-      const response = await getListCartNew();
-      console.log('API Response:', response);  // Muestra la respuesta de la API
-      if (response.success) {
-         setCart(response.cart);
+      const response = await getListCartByUser();
+      console.log('API Response:', response);  
+      if (response) {
+         setCart(response.data.cart);
       } else {
         setError(response.message || 'No se pudo obtener el carrito.');
       }
     } catch (err) {
+      console.log(err);
       setError('Error al obtener el carrito.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Función para actualizar la cantidad de un producto en el carrito
+  const updateCartItem = async (productId, newQuantity) => {
+    try {
+      setLoading(true);
+      
+      // Llamar a la API para actualizar la cantidad
+      const response = await updateCartProductRequest(productId, newQuantity);
+      
+      if (response.success) {
+        // Refrescar el carrito después de la actualización
+        await fetchCart();
+        return { success: true, message: 'Cantidad actualizada correctamente' };
+      } else {
+        throw new Error(response.message || 'Error al actualizar la cantidad');
+      }
+    } catch (err) {
+      console.error('Error al actualizar cantidad:', err);
+      setError(err.message || 'Error al actualizar la cantidad');
+      return { success: false, message: err.message || 'Error al actualizar la cantidad' };
     } finally {
       setLoading(false);
     }
@@ -26,12 +51,13 @@ const useUserCart = () => {
     fetchCart();
   }, []);
 
-  // Este useEffect se ejecuta cada vez que `cart` cambie
-  useEffect(() => {
-    console.log('Updated cart:', cart);  // Muestra el carrito después de la actualización
-  }, [cart]);  // Solo se ejecuta cuando `cart` cambia
-
-  return { cart, loading, error };
+  return { 
+    cart, 
+    loading, 
+    error, 
+    updateCartItem,
+    refreshCart: fetchCart 
+  };
 };
 
 export default useUserCart;
