@@ -1,4 +1,3 @@
-// src/hooks/useUserPosts.js
 import { useEffect, useState } from 'react';
 import { fetchUserPosts } from '../services/api';
 
