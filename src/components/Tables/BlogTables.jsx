@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Delete, Edit, Eye, FileText, Calendar, User } from 'lucide-react'
+import { Delete, Edit, Eye, FileText, Calendar, User, FileIcon } from 'lucide-react'
 import { getPostAll, softDeletePost } from "../../services/api" // ajusta la ruta según tu estructura
 import Swal from "sweetalert2"
 
@@ -169,25 +169,6 @@ const BlogTables = () => {
                         >
                           <Delete className="w-4 h-4" />
                         </button>
-                        <button
-                          title="Más opciones"
-                          className="p-2.5 rounded-xl bg-gray-50 text-gray-600 hover:bg-gray-100 hover:text-gray-700 transition-all duration-200 hover:shadow-md group"
-                        >
-                          <svg
-                            width="16"
-                            height="16"
-                            viewBox="0 0 20 20"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              className="stroke-current"
-                              d="M10.0161 14.9897V15.0397M10.0161 9.97598V10.026M10.0161 4.96231V5.01231"
-                              strokeWidth="2.5"
-                              strokeLinecap="round"
-                            />
-                          </svg>
-                        </button>
                       </div>
                     </td>
                   </tr>
@@ -197,14 +178,7 @@ const BlogTables = () => {
             {post.length === 0 && (
               <div className="text-center py-12 bg-gray-50/30">
                 <div className="mx-auto w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mb-4">
-                  <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
-                    ></path>
-                  </svg>
+                  <FileIcon className="w-8 h-8 text-gray-400" />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">No hay posts disponibles</h3>
                 <p className="text-gray-500">
