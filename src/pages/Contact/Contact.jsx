@@ -24,7 +24,7 @@ const Contact = () => {
     }
 
     return (
-        <section id="contact" className="bg-white dark:bg-[#0D0D0D]">
+        <section className="min-h-screen bg-white dark:bg-green-950 text-green-900 dark:text-green-100 px-4 md:px-10 py-8">
             <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
                 {/* Encabezado */}
                 <div className="mb-6 max-w-3xl text-center md:mx-auto md:mb-12">
