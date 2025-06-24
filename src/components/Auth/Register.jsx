@@ -173,7 +173,6 @@ export const Register = ({ onSwitch }) => {
   );
 };
 
-// Componente reutilizable de input
 const Input = ({ name, label, value, onChange, type = 'text', placeholder, prefix, onlyNumbers, maxLength }) => (
   <div>
     <label htmlFor={name} className="block mb-2 text-sm font-medium text-gray-900">{label}</label>
