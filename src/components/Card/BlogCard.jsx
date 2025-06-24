@@ -1,5 +1,7 @@
 "use client"
 
+import { ArrowRightIcon, CalendarIcon, EyeIcon } from "lucide-react"
+
 
 
 const BlogCard = ({ post, onClick }) => {
@@ -40,20 +42,7 @@ const BlogCard = ({ post, onClick }) => {
           {/* Indicador de hover */}
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <div className="bg-white/20 backdrop-blur-sm rounded-full p-3 transform scale-75 group-hover:scale-100 transition-transform duration-300">
-              <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                />
-              </svg>
+              <EyeIcon className="w-6 h-6 text-white" />
             </div>
           </div>
         </div>
@@ -84,20 +73,7 @@ const BlogCard = ({ post, onClick }) => {
           {/* Fecha con diseño mejorado */}
           <div className="flex items-center space-x-2 text-xs text-green-500 dark:text-green-400 group-hover:text-green-600 dark:group-hover:text-green-300 transition-colors duration-300">
             <div className="w-8 h-8 bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-800 dark:to-emerald-800 rounded-full flex items-center justify-center group-hover:from-green-200 group-hover:to-emerald-200 dark:group-hover:from-green-700 dark:group-hover:to-emerald-700 transition-colors duration-300">
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
+              <CalendarIcon className="w-4 h-4" />
             </div>
             <span className="font-medium">{new Date(post.date).toLocaleDateString()}</span>
           </div>
@@ -105,14 +81,7 @@ const BlogCard = ({ post, onClick }) => {
           {/* Indicador de acción */}
           <div className="flex items-center space-x-1 text-green-500 dark:text-green-400 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
             <span className="text-xs font-medium">Ver más</span>
-            <svg
-              className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
+            <ArrowRightIcon className="w-4 h-4" />
           </div>
         </div>
       </div>
