@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Delete, Edit } from 'lucide-react'
+import { Delete, Edit, PlusIcon, TagIcon } from 'lucide-react'
 import { getCategoryAll, softDeleteCategory, updateCategory } from "../../services/api"
 import Swal from "sweetalert2"
 import AddCategoryModal from './../Modal/AddCategoryModal'
@@ -112,9 +112,7 @@ const CategoriesTables = () => {
             onClick={() => setShowAddModal(true)}
             className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition-all duration-200 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
+            <PlusIcon className="w-5 h-5 mr-2" />
             Crear Categoria
           </button>
         </div>
@@ -279,9 +277,7 @@ const CategoriesTables = () => {
             {category.length === 0 && (
               <div className="text-center py-12 bg-gray-50/30">
                 <div className="mx-auto w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mb-4">
-                  <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                  </svg>
+                  <TagIcon className="w-8 h-8 text-gray-400" />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">No hay categorías disponibles</h3>
                 <p className="text-gray-500">Las categorías aparecerán aquí una vez que sean creadas en el sistema.</p>
