@@ -7,10 +7,7 @@ import imgHomeOne from '../../assets/bg-home-2.png';
 
 const ContentHome = () => {
     
-    const handleButtonProducts = ()=>{
-        <Link to="/catalog" />
-    }
-
+ 
 
     return (
         <div>
@@ -21,9 +18,12 @@ const ContentHome = () => {
                     <p className="text-xl md:text-2xl mb-12">Conectamos agricultores, proveedores y compradores en un solo lugar.</p>
                     <div className="flex flex-col md:flex-row justify-center gap-4">
                         <Link to="/catalog">
-                            <button  className="bg-white text-green-800 px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition duration-300">Ver Productos</button>
+                            <button  className="bg-white text-green-800 px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition duration-300 cursor-pointer">Ver Productos</button>
                         </Link>
-                        <button className="border-2 border-white text-white px-8 py-3 rounded-full font-bold hover:bg-white hover:text-green-800 transition duration-300">Ver Blog</button>
+                        <Link to="/blog">
+                        
+                            <button className="border-2 border-white text-white px-8 py-3 rounded-full font-bold hover:bg-white hover:text-green-800 transition duration-300 cursor-pointer">Ver Blog</button>
+                        </Link>
                     </div>
                 </div>
             </section>
@@ -68,7 +68,6 @@ const ContentHome = () => {
                             <h2 className="text-3xl font-bold text-gray-800 mb-6">¿Quiénes somos?</h2>
                             <p className="text-gray-600 mb-4">AgroMarket nació con la visión de modernizar el comercio agropecuario en Guatemala y toda Latinoamérica.</p>
                             <p className="text-gray-600 mb-6">Somos un puente entre productores, distribuidores y compradores que desean una economía rural más justa, digital e inclusiva.</p>
-                            <button className="bg-green-700 text-white px-6 py-2 rounded-full font-bold hover:bg-green-800 transition duration-300">Conoce nuestra historia</button>
                         </div>
                         <div className="md:w-1/2">
                             <img src={imgHomeOne} alt="Campo agrícola" className="rounded-lg shadow-lg w-full h-auto" />
