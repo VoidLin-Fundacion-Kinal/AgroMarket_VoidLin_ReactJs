@@ -104,12 +104,12 @@ export const getListCart = async () => {
   }
 };
 
-export const getListCartIdNew = async () => {
+export const getListCartByUser = async () => {
   try {
-    const response = await apiClient.get('/cart/listCartUserByIdNew');
+    const response = await apiClient.get('/cart/listCartByUser');
     console.log('Carts:', response);
 
-    return response.data.cart;
+    return response;
   } catch (error) {
     console.error('Error al obtener el carrito:', error);
     throw error;
@@ -124,6 +124,15 @@ export const deleteProductFromCart = async (productId) => {
     return response.data
   } catch (error) {
     throw error.response?.data || { message: "Error inesperado al eliminar producto" }
+  }
+}
+
+export const updateCartProductRequest = async (productId, quantity) => {
+  try {
+    const response = await apiClient.post(`/cart/updateCartItem`, { productId, quantity })
+    return response.data
+  } catch (error) {
+    throw error.response?.data || { message: "Error inesperado al actualizar cantidad" }
   }
 }
 
@@ -439,9 +448,9 @@ export const updateUserLogo = async (formData) => {
 
 export const fetchUserPosts = async () => {
   
-  const response = await apiClient.get('/post/listPostsUser/');
+  const response = await apiClient.get('/post/listPostsUser');
   return response.data.posts;
-};
+}
 
 export const getUserCart = async () => {
    const response = await apiClient.get('/cart/listCartUserById');
@@ -458,9 +467,7 @@ export const createPost = async (formData) => {
   try {
     const response = await apiClient.post('/post/addPost', formData, {
       headers: {
-        // ❌ No pongas esto manualmente
-        // 'Content-Type': 'multipart/form-data', <-- elimina esta línea
-      },
+      }
     });
     return response.data;
   } catch (error) {
