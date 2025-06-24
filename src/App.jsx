@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import Layout from './layouts/Layout.jsx';
 import CatalogProducts from './pages/Catalog/CatalogProducts.jsx';
 import { AuthPages, AuthPagesRegister } from './pages/AuthPages/AuthPages.jsx';
@@ -18,12 +18,21 @@ import CartsTables from './components/Tables/CartsTables.jsx';
 import BlogTables from './components/Tables/BlogTables.jsx';
 import ContentHomeDashAdmin from './pages/Home/ContentHomeDashAdmin.jsx';
 import Dashboard from './pages/Dashboard.jsx';
+import CartView from './components/Cart/CartView.jsx';
+import BillsView from './components/BillsUserView/BillsView.jsx';
+import NewPostView from './components/NewPostView/NewPostView.jsx';
+import Editar from './components/UserEdit/UserEdit.jsx';
+import MainContent from './components/MainContent/MainContent.jsx';
+import InventoryTables from './components/Tables/InventoryTables.jsx';
 
 
 
 
 
 function App() {
+
+const navigate = useNavigate();
+
   return (
       <Routes>
         {/* Rutas públicas */}
@@ -35,7 +44,13 @@ function App() {
           <Route path="contact" element={<Contact />} />
           <Route path="blog" element={<Blog />} />
           <Route path="cart" element={<Cart />} />
-          <Route path='DashboardUser' element={<Dashboard />} />
+          <Route path='/account/settings' element={<Dashboard />}>
+            <Route index element={<MainContent />} />
+            <Route path='cartUser' element={<CartView />} />
+            <Route path='bills' element={<BillsView />} />
+            <Route path='newpost' element={<NewPostView onCancel={() => navigate('/account/settings')} />} />
+            <Route path='edit' element={<Editar />} />
+          </Route>
         </Route>
 
         {/* Rutas de autenticación */}
@@ -53,13 +68,10 @@ function App() {
           <Route path='invoices' element={<InvoicesTables />}/>
           <Route path='carts' element={<CartsTables />}/>
           <Route path='blog' element={<BlogTables />}/>
+          <Route path='inventory' element={<InventoryTables />}/>
         </Route>
 
-        {/* Dashboard user */}
-        <Route>
-
-
-        </Route>
+        <Route path='/account/settings' element={<Dashboard />}/>
 
         {/* Ruta 404 */}
         <Route path="*" element={<NotFound />} />
