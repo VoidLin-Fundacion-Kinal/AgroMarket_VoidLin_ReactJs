@@ -14,6 +14,7 @@ import {
   ShoppingCart,
   Menu,
   X,
+  BoxIcon,
 } from "lucide-react"
 import imgLogo from "../../assets/logoAgroMarket.png"
 
@@ -59,6 +60,7 @@ const NavBarAdmin = () => {
     { name: "Invoices", path: "/invoices", icon: Receipt },
     { name: "Carts", path: "/carts", icon: ShoppingCart },
     { name: "Blog", path: "/blog", icon: MessageSquareText },
+    { name: "Inventory", path: "/inventory", icon: BoxIcon },
   ]
 
   const NavItem = ({ item, isMobile = false }) => {
