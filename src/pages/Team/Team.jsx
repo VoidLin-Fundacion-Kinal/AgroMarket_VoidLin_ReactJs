@@ -58,7 +58,6 @@ const Team = () => {
     )
 }
 
-// Componente Reutilizable
 const TeamMember = ({ name, role, img }) => (
     <div className="group w-full max-w-sm text-center">
         <div className="relative overflow-hidden rounded-xl mb-4">

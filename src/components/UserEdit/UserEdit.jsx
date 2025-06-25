@@ -16,6 +16,13 @@ const Editar = () => {
     handleImageSubmit,
   } = useUserEdit()
 
+  const handleImageSubmitWithReload = async (e) => {
+    const success = await handleImageSubmit(e)
+    if (success) {
+      window.location.reload()
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-8 px-4">
       <div className="max-w-4xl mx-auto">
@@ -71,17 +78,7 @@ const Editar = () => {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-[#244933]">Correo Electrónico</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#048437] focus:ring-0 transition-colors duration-200"
-                  required
-                />
-              </div>
+              
 
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-[#244933]">Dirección</label>
@@ -94,16 +91,7 @@ const Editar = () => {
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-[#244933]">Teléfono</label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#048437] focus:ring-0 transition-colors duration-200"
-                />
-              </div>
+              
 
               <button
                 type="submit"
@@ -182,7 +170,7 @@ const Editar = () => {
                 </div>
               </div>
 
-              <form onSubmit={handleImageSubmit} className="p-6 space-y-6">
+              <form onSubmit={handleImageSubmitWithReload} className="p-6 space-y-6">
                 <div className="space-y-2">
                   <label className="block text-sm font-semibold text-[#244933]">Seleccionar Imagen</label>
                   <div className="relative">

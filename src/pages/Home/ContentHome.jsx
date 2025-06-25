@@ -11,7 +11,7 @@ const ContentHome = () => {
 
     return (
         <div>
-            {/* Sección de bienvenida */}
+            
             <section className="bg-gradient-to-r from-green-800 to-green-600 text-white py-20">
                 <div className="container mx-auto px-6 text-center">
                     <h1 className="text-4xl md:text-6xl font-bold mb-6">¡Impulsamos el futuro de los Agricultores!</h1>
@@ -28,7 +28,7 @@ const ContentHome = () => {
                 </div>
             </section>
 
-            {/* Servicios */}
+            
             <section className="py-16 bg-white">
                 <div className="container mx-auto px-6">
                     <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">Nuestros Servicios</h2>
@@ -60,7 +60,6 @@ const ContentHome = () => {
                 </div>
             </section>
 
-            {/* Acerca de nosotros */}
             <section className="py-16 bg-gray-100">
                 <div className="container mx-auto px-6">
                     <div className="flex flex-col md:flex-row items-center">
@@ -76,7 +75,6 @@ const ContentHome = () => {
                 </div>
             </section>
 
-            {/* Estadísticas */}
             <section className="py-16 bg-green-700 text-white">
                 <div className="container mx-auto px-6">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
@@ -96,7 +94,6 @@ const ContentHome = () => {
                 </div>
             </section>
 
-            {/* Opiniones */}
             <section className="py-16 bg-white">
                 <div className="container mx-auto px-6">
                     <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">Opiniones de nuestros usuarios</h2>

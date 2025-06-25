@@ -1,4 +1,3 @@
-// hooks/useUserEdit.jsx
 import { useState, useEffect } from "react";
 import {
   getUserRequest,
@@ -6,7 +5,7 @@ import {
   updatePassword,
   updateUserLogo
 } from "../services/api";
-import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 
 const useUserEdit = () => {
   const [formData, setFormData] = useState({
@@ -36,9 +35,7 @@ const useUserEdit = () => {
         setFormData({
           name: data.name || "",
           surname: data.surname || "",
-          email: data.email || "",
           address: data.address || "",
-          phone: data.phone || "",
         });
       } catch (err) {
         setError("Error al cargar datos de usuario");
@@ -75,10 +72,9 @@ const useUserEdit = () => {
     setError(null);
     try {
       await updateUser(formData);
-      toast.success("Datos actualizados correctamente");
+      Swal.fire({ icon: 'success', title: '¡Éxito!', text: 'Datos actualizados correctamente' });
     } catch (err) {
-      setError("Error al actualizar datos");
-      toast.error("Error al actualizar datos");
+      Swal.fire({ icon: 'error', title: 'Error', text: 'Error al actualizar datos' });
     } finally {
       setLoading(false);
     }
@@ -92,14 +88,14 @@ const useUserEdit = () => {
       const response = await updatePassword(passwordData);
       console.log("Response from updatePassword:", response);
       if (response.success) {
-        toast.success("Contraseña actualizada correctamente");
+        Swal.fire({ icon: 'success', title: '¡Éxito!', text: 'Contraseña actualizada correctamente' });
         setPasswordData({ oldPassword: "", newPassword: "" });
       } else {
-        toast.error(response.message || "Error al cambiar la contraseña");
+        Swal.fire({ icon: 'error', title: 'Error', text: response.message || "Error al cambiar la contraseña" });
       }
     } catch (err) {
       setError("Error al cambiar la contraseña");
-      toast.error("Error al cambiar la contraseña");
+      Swal.fire({ icon: 'error', title: 'Error', text: respose.message });
     } finally {
       setLoading(false);
     }
@@ -108,8 +104,8 @@ const useUserEdit = () => {
   const handleImageSubmit = async (e) => {
     e.preventDefault();
     if (!selectedImage) {
-      toast.error("Debes seleccionar una imagen");
-      return;
+      Swal.fire({ icon: 'error', title: 'Error', text: 'Debes seleccionar una imagen' });
+      return false;
     }
 
     const formData = new FormData();
@@ -120,14 +116,17 @@ const useUserEdit = () => {
     try {
       const response = await updateUserLogo(formData);
       if (response.success) {
-        toast.success("Imagen de perfil actualizada");
+        Swal.fire({ icon: 'success', title: '¡Éxito!', text: 'Imagen de perfil actualizada' });
         setSelectedImage(null);
+        return true;
       } else {
-        toast.error(response.message || "Error al subir la imagen");
+        Swal.fire({ icon: 'error', title: 'Error', text: response.message || "Error al subir la imagen" });
+        return false;
       }
     } catch (err) {
       setError("Error al subir la imagen");
-      toast.error("Error al subir la imagen");
+      Swal.fire({ icon: 'error', title: 'Error', text: 'Error al subir la imagen' });
+      return false;
     } finally {
       setLoading(false);
     }

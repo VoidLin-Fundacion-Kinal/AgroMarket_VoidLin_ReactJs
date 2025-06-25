@@ -1,14 +1,27 @@
 "use client"
 
 import { useState } from "react"
+import { useEffect } from "react"
 import Swal from "sweetalert2"
 import { X, Building2, FileText, Mail, Phone, Package, User, Upload, Trash2, ImageIcon } from "lucide-react"
-import { createProvider } from "../../services/api" // Asegúrate de tener este endpoint
+import { createProvider } from "../../services/api" 
 
 const AddProviderModal = ({ showModal, setShowModal, setProviders }) => {
   const [loading, setLoading] = useState(false)
   const [selectedImage, setSelectedImage] = useState(null)
   const [imagePreview, setImagePreview] = useState(null)
+
+  useEffect(() => {
+    if (!showModal) {
+      setSelectedImage(null)
+      setImagePreview(null)
+      // Limpiar el formulario cuando se cierre el modal
+      const form = document.querySelector('form')
+      if (form) {
+        form.reset()
+      }
+    }
+  }, [showModal])
 
   const handleImageChange = (e) => {
     const file = e.target.files[0]
@@ -18,7 +31,6 @@ const AddProviderModal = ({ showModal, setShowModal, setProviders }) => {
         return
       }
 
-      // Validar tipo de archivo
       if (!file.type.startsWith("image/")) {
         Swal.fire("Error", "Por favor selecciona un archivo de imagen válido.", "error")
         return
@@ -26,7 +38,6 @@ const AddProviderModal = ({ showModal, setShowModal, setProviders }) => {
 
       setSelectedImage(file)
 
-      // Crear vista previa
       const reader = new FileReader()
       reader.onload = (e) => {
         setImagePreview(e.target.result)
@@ -45,9 +56,26 @@ const AddProviderModal = ({ showModal, setShowModal, setProviders }) => {
     }
   }
 
+  const handleCloseModal = () => {
+    setShowModal(false)
+    setSelectedImage(null)
+    setImagePreview(null)
+    // Limpiar el formulario
+    const form = document.querySelector('form')
+    if (form) {
+      form.reset()
+    }
+    const fileInput = document.querySelector('input[name="providerLogo"]')
+    if (fileInput) fileInput.value = ""
+  }
+
   const handleCreateProvider = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
+
+    if (selectedImage) {
+      formData.set("providerLogo", selectedImage);
+    }
 
     try {
         setLoading(true);
@@ -55,6 +83,23 @@ const AddProviderModal = ({ showModal, setShowModal, setProviders }) => {
 
         if (response.success) {
             Swal.fire("Éxito", "Proveedor creado correctamente", "success");
+            setShowModal(false);
+            setSelectedImage(null);
+            setImagePreview(null);
+            
+            // Limpiar el formulario
+            e.target.reset();
+            
+            // Actualizar la lista de proveedores
+            if (setProviders) {
+                if (response.provider) {
+                    // Agregar el nuevo proveedor a la lista existente
+                    setProviders(prev => [...prev, response.provider]);
+                } else {
+                    // Si no hay datos del proveedor en la respuesta, recargar la página
+                    window.location.reload();
+                }
+            }
         }
 
     } catch (error) {
@@ -96,7 +141,7 @@ const AddProviderModal = ({ showModal, setShowModal, setProviders }) => {
               </div>
             </div>
             <button
-              onClick={() => setShowModal(false)}
+              onClick={handleCloseModal}
               className="w-8 h-8 bg-white/20 hover:bg-white/30 rounded-lg flex items-center justify-center transition-all duration-200 group"
               disabled={loading}
             >
@@ -268,7 +313,7 @@ const AddProviderModal = ({ showModal, setShowModal, setProviders }) => {
             <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-100">
               <button
                 type="button"
-                onClick={() => setShowModal(false)}
+                onClick={handleCloseModal}
                 className="flex-1 px-6 py-3 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl font-semibold transition-all duration-200 hover:shadow-md"
                 disabled={loading}
               >

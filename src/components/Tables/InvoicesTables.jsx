@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { Delete, Edit, FileText, Download, Printer, FileTextIcon } from "lucide-react"
-import { getInvoicesAll } from "../../services/api" // ajusta la ruta según tu estructura
-
+import { getInvoicesAll } from "../../services/api" 
 const InvoicesTables = () => {
   const [invoice, setInvoice] = useState([])
   const columns = ["Cliente", "Detalles", "SubTotal", "Total", "Estado"]

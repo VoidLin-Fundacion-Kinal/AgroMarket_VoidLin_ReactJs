@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { Delete, Edit, ShoppingCart, Eye, CreditCard, ShoppingCartIcon } from "lucide-react"
-import { getCartAll } from "../../services/api" // ajusta la ruta según tu estructura
+import { getCartAll } from "../../services/api" 
 
 const CartsTables = () => {
   const [cart, setCart] = useState([])

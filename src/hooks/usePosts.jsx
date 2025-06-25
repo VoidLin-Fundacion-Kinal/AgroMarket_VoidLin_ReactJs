@@ -13,15 +13,7 @@ export const usePosts = () => {
       const response = await getPostsRequest();
       
 
-      if (!response || !response.success) {
-        Swal.fire({
-          title: 'Error',
-          text: response?.message || 'Error desconocido al obtener los posts.',
-          icon: 'error',
-          confirmButtonText: 'Aceptar'
-        });
-        return;
-      }
+      
 
       setPosts(response.posts || []);
 

@@ -23,16 +23,13 @@ const useUserCart = () => {
     }
   };
 
-  // Función para actualizar la cantidad de un producto en el carrito
   const updateCartItem = async (productId, newQuantity) => {
     try {
       setLoading(true);
       
-      // Llamar a la API para actualizar la cantidad
       const response = await updateCartProductRequest(productId, newQuantity);
       
       if (response.success) {
-        // Refrescar el carrito después de la actualización
         await fetchCart();
         return { success: true, message: 'Cantidad actualizada correctamente' };
       } else {

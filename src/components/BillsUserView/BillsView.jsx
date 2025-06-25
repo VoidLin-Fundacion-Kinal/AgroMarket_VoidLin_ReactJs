@@ -6,25 +6,21 @@ const BillsView = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const billsPerPage = 10;
 
-  // Calcular facturas para la página actual
   const indexOfLastBill = currentPage * billsPerPage;
   const indexOfFirstBill = indexOfLastBill - billsPerPage;
   const currentBills = bills?.slice(indexOfFirstBill, indexOfLastBill) || [];
   const totalPages = Math.ceil((bills?.length || 0) / billsPerPage);
 
-  // Función para cambiar de página
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
-  // Función para ir a la página anterior
   const handlePreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
     }
   };
 
-  // Función para ir a la página siguiente
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
@@ -75,12 +71,12 @@ const BillsView = () => {
         <div className="flex items-center justify-center space-x-3 mb-4">
           <h2 className="text-3xl font-bold text-[#048437]">📋 Mis Facturas</h2>
         </div>
-        <p className="text-center text-gray-600">Historial de todas tus compras y transacciones</p>
+        <p className="text-center text-stone-600">Historial de todas tus compras y transacciones</p>
         
         {/* Información de paginación */}
         {bills.length > 0 && (
           <div className="text-center mt-4">
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-stone-500">
               Mostrando {indexOfFirstBill + 1}-{Math.min(indexOfLastBill, bills.length)} de {bills.length} facturas
             </p>
           </div>
@@ -92,12 +88,12 @@ const BillsView = () => {
         {bills.length === 0 ? (
           <div className="text-center py-12">
             <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-10 h-10 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold text-gray-700 mb-2">No tienes facturas registradas</h3>
-            <p className="text-gray-500">Cuando realices una compra, aparecerá aquí tu historial de facturas</p>
+            <h3 className="text-xl font-semibold text-stone-700 mb-2">No tienes facturas registradas</h3>
+            <p className="text-stone-500">Cuando realices una compra, aparecerá aquí tu historial de facturas</p>
           </div>
         ) : (
           <>
@@ -113,8 +109,8 @@ const BillsView = () => {
                         </svg>
                       </div>
                       <div>
-                        <h3 className="text-lg font-bold text-gray-800">Factura #{indexOfFirstBill + idx + 1}</h3>
-                        <p className="text-sm text-gray-500">
+                        <h3 className="text-lg font-bold text-stone-800">Factura #{indexOfFirstBill + idx + 1}</h3>
+                        <p className="text-sm text-stone-500">
                           {bill.createdAt ? new Date(bill.createdAt).toLocaleDateString("es-ES", {
                             year: "numeric",
                             month: "long",
@@ -133,7 +129,7 @@ const BillsView = () => {
                       <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
                         bill.status === 'PAGADO' ? 'bg-green-100 text-green-800' :
                         bill.status === 'PENDIENTE' ? 'bg-yellow-100 text-yellow-800' :
-                        'bg-gray-100 text-gray-800'
+                        'bg-gray-100 text-stone-800'
                       }`}>
                         <div className={`w-2 h-2 rounded-full mr-2 ${
                           bill.status === 'PAGADO' ? 'bg-green-500' :
@@ -147,7 +143,7 @@ const BillsView = () => {
 
                   {/* Products List */}
                   <div className="bg-white rounded-lg border border-gray-100 p-4">
-                    <h4 className="text-sm font-semibold text-gray-700 mb-3 flex items-center">
+                    <h4 className="text-sm font-semibold text-stone-700 mb-3 flex items-center">
                       <svg className="w-4 h-4 mr-2 text-[#d76628]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                       </svg>
@@ -163,10 +159,10 @@ const BillsView = () => {
                                 <span className="text-white text-xs font-bold">{i + 1}</span>
                               </div>
                               <div>
-                                <p className="font-medium text-gray-800">
+                                <p className="font-medium text-stone-800">
                                   {item.product?.name ?? 'Producto eliminado'}
                                 </p>
-                                <p className="text-sm text-gray-500">
+                                <p className="text-sm text-stone-500">
                                   Cantidad: {item.quantity} | Precio: Q{item.product?.price ?? 0}
                                 </p>
                               </div>
@@ -181,17 +177,17 @@ const BillsView = () => {
                       </div>
                     ) : (
                       <div className="text-center py-4">
-                        <svg className="w-8 h-8 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-8 h-8 text-stone-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                         </svg>
-                        <p className="text-gray-400 text-sm">Sin productos en esta factura</p>
+                        <p className="text-stone-400 text-sm">Sin productos en esta factura</p>
                       </div>
                     )}
                   </div>
 
                   {/* Bill Footer */}
                   <div className="mt-4 pt-4 border-t border-gray-200 flex items-center justify-between">
-                    <div className="flex items-center space-x-4 text-sm text-gray-500">
+                    <div className="flex items-center space-x-4 text-sm text-stone-500">
                       <div className="flex items-center">
                         <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -200,9 +196,7 @@ const BillsView = () => {
                       </div>
                     </div>
                     
-                    <button className="bg-gradient-to-r from-[#048437] to-[#06a43d] text-white px-4 py-2 rounded-lg font-medium hover:shadow-lg transition-all duration-300 hover:scale-105">
-                      Ver detalles
-                    </button>
+                    
                   </div>
                 </div>
               ))}
@@ -217,8 +211,8 @@ const BillsView = () => {
                   disabled={currentPage === 1}
                   className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
                     currentPage === 1
-                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                      : 'bg-[#048437] text-white hover:bg-[#06a43d] hover:shadow-lg'
+                      ? 'bg-gray-100 text-stone-950 cursor-not-allowed'
+                      : 'bg-[#048437] text-stone-950 hover:bg-[#06a43d] hover:shadow-lg'
                   }`}
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -235,8 +229,8 @@ const BillsView = () => {
                       onClick={() => handlePageChange(page)}
                       className={`w-10 h-10 rounded-lg font-medium transition-all duration-300 ${
                         currentPage === page
-                          ? 'bg-[#048437] text-white shadow-lg'
-                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                          ? 'bg-[#048437] text-stone-950 shadow-lg'
+                          : 'bg-gray-100 text-stone-950 hover:bg-gray-200'
                       }`}
                     >
                       {page}
@@ -250,8 +244,8 @@ const BillsView = () => {
                   disabled={currentPage === totalPages}
                   className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
                     currentPage === totalPages
-                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                      : 'bg-[#048437] text-white hover:bg-[#06a43d] hover:shadow-lg'
+                      ? 'bg-gray-100 text-stone-950 cursor-not-allowed'
+                      : 'bg-[#048437] text-stone-950 hover:bg-[#06a43d] hover:shadow-lg'
                   }`}
                 >
                   <span>Siguiente</span>

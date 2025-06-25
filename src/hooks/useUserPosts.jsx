@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { fetchUserPosts } from '../services/api';
 
 export default function useUserPosts() {
@@ -6,19 +6,27 @@ export default function useUserPosts() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const data = await fetchUserPosts();
-        setPosts(data);
-      } catch (err) {
-        setError('Error al cargar publicaciones');
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
+  const loadPosts = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError('');
+      const data = await fetchUserPosts();
+      setPosts(data);
+    } catch (err) {
+      setError('Error al cargar publicaciones');
+      console.error('Error loading posts:', err);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  return { posts, loading, error };
+  useEffect(() => {
+    loadPosts();
+  }, [loadPosts]);
+
+  const refetch = useCallback(() => {
+    loadPosts();
+  }, [loadPosts]);
+
+  return { posts, loading, error, refetch };
 }

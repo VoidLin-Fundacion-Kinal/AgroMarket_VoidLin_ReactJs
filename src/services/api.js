@@ -269,6 +269,16 @@ export const softDeleteProduct = async (id) => {
   }
 }
 
+export const revertSoftDeleteProduct = async (productId) => {
+  try {
+    const response = await apiClient.post('/product/revertSoftDeleteProduct', { idProduct: productId })
+    return response.data
+  } catch (error) {
+    console.error('Error al reactivar producto:', error)
+    throw error
+  }
+}
+
 export const softDeleteProvider = async (id) => {
    try {
     const response = await apiClient.put(`/provider/softDeleteProvider/${id}`)
@@ -276,6 +286,16 @@ export const softDeleteProvider = async (id) => {
     return response.data
   } catch (error) {
     console.error('Error al eliminar proveedor:', error)
+    throw error
+  }
+}
+
+export const revertSoftDeleteProvider = async (providerId) => {
+  try {
+    const response = await apiClient.post('/provider/revertSoftDeleteProvider', { idProvider: providerId })
+    return response.data
+  } catch (error) {
+    console.error('Error al reactivar proveedor:', error)
     throw error
   }
 }
@@ -291,6 +311,16 @@ export const softDeleteCategory = async (id) => {
   }
 }
 
+export const revertSoftDeleteCategory = async (categoryId) => {
+  try {
+    const response = await apiClient.put(`/category/revertSoftDeleteCategory`, { idCategory: categoryId })
+    return response.data
+  } catch (error) {
+    console.error('Error al reactivar categoría:', error)
+    throw error
+  }
+}
+
 export const softDeleteUser = async (id) => {
   try {
     const response = await apiClient.put(`/user/softDeleteUserByAdmin/${id}`)
@@ -301,7 +331,16 @@ export const softDeleteUser = async (id) => {
     throw error
   }
 }
-  
+
+export const revertSoftDeleteUser = async (userId) => {
+  try {
+    const response = await apiClient.post(`/user/revertSoftDeleteUser`, { idUser: userId })
+    return response.data
+  } catch (error) {
+    console.error('Error al reactivar usuario:', error)
+    throw error
+  }
+}
 
 export const softDeletePost = async (id) => {
   try{
@@ -312,6 +351,16 @@ export const softDeletePost = async (id) => {
     console.error('Error al eliminar un Post:', error);
     throw error
     
+  }
+}
+
+export const revertSoftDeletePost = async (postId) => {
+  try {
+    const response = await apiClient.put('/post/revertSoftDeletePost', { idPost: postId })
+    return response.data
+  } catch (error) {
+    console.error('Error al reactivar post:', error)
+    throw error
   }
 }
 
@@ -354,6 +403,20 @@ export const createCategory = async (formData) => {
   }
 }
 
+export const createUser = async (userData) => {
+  try {
+    const response = await apiClient.post("/user/createUser", userData, {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    return response.data
+  } catch (error) {
+    console.error("Error al crear usuario:", error)
+    throw error
+  }
+}
+
 export const updateProduct = async (productId, formData) => {
   try {
     const response = await apiClient.put(`/product/updateProduct/${productId}`, formData)
@@ -385,12 +448,16 @@ export const updateProvider = async (providerId, formData) => {
 };
 
 
-export const createInventoryMovement = async (invetoryId, formData) => {
+export const createInventoryMovement = async (movementData) => {
   try {
-    const response = await apiClient.put(`/inventory/addInventoryMovement/${invetoryId  }`, formData)
+    const response = await apiClient.post("/inventory/addInventoryMovement", movementData, {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
     return response.data;
   } catch (error) {
-    console.error("Error updating provider:", error);
+    console.error("Error al crear movimiento de inventario:", error);
     throw error;
   }
 };
@@ -401,7 +468,7 @@ export const updateUser = async (formData) => {
   const token = localStorage.getItem("token");
   const response = await apiClient.put('/user/updateUser', formData, {
     headers: {
-      Authorization: token, // ✅ sin 'Bearer'
+      Authorization: token, 
     }
   });
   return response.data;
@@ -412,7 +479,7 @@ export const updatePassword = async (formData) => {
   const token = localStorage.getItem("token");
   const response = await apiClient.put('/user/updatePassword', formData, {
     headers: {
-      Authorization: token, // ✅ sin 'Bearer'
+      Authorization: token, 
     }
   });
   return response.data;
@@ -472,7 +539,55 @@ export const createPost = async (formData) => {
     return response.data;
   } catch (error) {
     console.error('API error:', error);
-    throw error; // ✅ Propaga el error al hook/componente
+    throw error; 
+  }
+};
+
+export const addComment = async (postId, comment) => {
+  try {
+    const response = await apiClient.post(`/comment/addComment/${postId}`, { comment }, {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error al agregar comentario:', error);
+    throw error;
+  }
+};
+
+export const updateComment = async (commentId, comment) => {
+  try {
+    const response = await apiClient.put(`/comment/updateComment/${commentId}`, { comment }, {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error al actualizar comentario:', error);
+    throw error;
+  }
+};
+
+export const deleteComment = async (commentId) => {
+  try {
+    const response = await apiClient.put(`/comment/deleteComment/${commentId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error al eliminar comentario:', error);
+    throw error;
+  }
+};
+
+export const getPostById = async (postId) => {
+  try {
+    const response = await apiClient.get(`/post/listPostById/${postId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener post:', error);
+    throw error;
   }
 };
 

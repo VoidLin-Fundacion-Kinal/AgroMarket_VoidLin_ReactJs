@@ -1,8 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Delete, Edit, PlusIcon, TagIcon } from 'lucide-react'
-import { getCategoryAll, softDeleteCategory, updateCategory } from "../../services/api"
+import { Delete, Edit, PlusIcon, TagIcon, RotateCcw } from 'lucide-react'
+import { getCategoryAll, softDeleteCategory, updateCategory, revertSoftDeleteCategory } from "../../services/api"
 import Swal from "sweetalert2"
 import AddCategoryModal from './../Modal/AddCategoryModal'
 import { X, Tag, FileText, Check } from "lucide-react"
@@ -94,6 +94,28 @@ const CategoriesTables = () => {
         Swal.fire("Desactivado", "La categoria ha sido desactivado.", "success")
       } catch (error) {
         Swal.fire("Error", "No se pudo desactivar la Categoria.", "error")
+        console.log(error)
+      }
+    }
+  }
+
+  const handleRevertSoftDelete = async (categoryId) => {
+    const confirm = await Swal.fire({
+      title: "¿Reactivar Categoria?",
+      text: "Esta categoria se marcará como activo, no se eliminará permanentemente.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, reactivar",
+      cancelButtonText: "Cancelar"
+    })
+
+    if (confirm.isConfirmed) {
+      try {
+        await revertSoftDeleteCategory(categoryId)
+        setCategory(prev => prev.map(p => p._id === categoryId ? { ...p, isActive: true } : p))
+        Swal.fire("Reactivado", "La categoria ha sido reactivado.", "success")
+      } catch (error) {
+        Swal.fire("Error", "No se pudo reactivar la Categoria.", "error")
         console.log(error)
       }
     }
@@ -255,18 +277,32 @@ const CategoriesTables = () => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
-                        <button 
-                          onClick={() => handleEditClick(cat)}
-                          className="p-2.5 rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 transition-all duration-200 hover:shadow-md group"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button 
-                          onClick={() => handleSoftDelete(cat._id)} 
-                          className="p-2.5 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 transition-all duration-200 hover:shadow-md group"
-                        >
-                          <Delete className="w-4 h-4" />
-                        </button>
+                        {cat.isActive ? (
+                          <>
+                            <button 
+                              onClick={() => handleEditClick(cat)}
+                              className="p-2.5 rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 transition-all duration-200 hover:shadow-md group"
+                              title="Editar categoría"
+                            >
+                              <Edit className="w-4 h-4" />
+                            </button>
+                            <button 
+                              onClick={() => handleSoftDelete(cat._id)} 
+                              className="p-2.5 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 transition-all duration-200 hover:shadow-md group"
+                              title="Desactivar categoría"
+                            >
+                              <Delete className="w-4 h-4" />
+                            </button>
+                          </>
+                        ) : (
+                          <button 
+                            onClick={() => handleRevertSoftDelete(cat._id)} 
+                            className="p-2.5 rounded-xl bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-700 transition-all duration-200 hover:shadow-md group"
+                            title="Reactivar categoría"
+                          >
+                            <RotateCcw className="w-4 h-4" />
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>

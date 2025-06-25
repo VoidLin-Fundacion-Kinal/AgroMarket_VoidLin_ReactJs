@@ -37,7 +37,7 @@ export const useLogin = () => {
           navigate('/home');
           break;
         case 'USUARIO':
-          navigate('/home'); // cambia según rutas reales
+          navigate('/home'); 
           break;
         default:
           navigate('/');

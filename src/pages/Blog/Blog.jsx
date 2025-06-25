@@ -13,12 +13,31 @@ const Blog = () => {
     });
   }, []);
 
+  // Actualizar el post seleccionado cuando los posts cambien
+  useEffect(() => {
+    if (selectedPost && posts.length > 0) {
+      const updatedPost = posts.find(p => p._id === selectedPost._id);
+      if (updatedPost) {
+        setSelectedPost(updatedPost);
+      }
+    }
+  }, [posts, selectedPost]);
+
   const openModal = (post) => {
     setSelectedPost(post);
   };
 
   const closeModal = () => {
     setSelectedPost(null);
+  };
+
+  const handleCommentUpdate = async () => {
+    try {
+      // Recargar todos los posts para obtener los comentarios actualizados
+      await getPosts();
+    } catch (error) {
+      console.error('Error al actualizar comentarios:', error);
+    }
   };
 
   return (
@@ -49,7 +68,13 @@ const Blog = () => {
       </section>
 
       {/* Modal de Detalles */}
-      {selectedPost && <BlogModal post={selectedPost} onClose={closeModal} />}
+      {selectedPost && (
+        <BlogModal 
+          post={selectedPost} 
+          onClose={closeModal} 
+          onCommentUpdate={handleCommentUpdate}
+        />
+      )}
     </main>
   );
 };

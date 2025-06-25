@@ -16,7 +16,6 @@ const UpdateProviderModal = ({ showModal, setShowModal, setProviders, providerTo
     legalRepresentative: ''
   })
 
-  // Inicializar los valores del formulario
   useEffect(() => {
     if (providerToEdit) {
       setFormData({

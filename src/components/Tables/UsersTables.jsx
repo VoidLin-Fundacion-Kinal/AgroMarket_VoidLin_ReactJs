@@ -1,12 +1,14 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Delete, Edit, UserIcon } from "lucide-react"
-import { getUsersAll, softDeleteUser } from "../../services/api" // ajusta la ruta según tu estructura
+import { Delete, Edit, UserIcon, PlusIcon, RotateCcw } from "lucide-react"
+import { getUsersAll, softDeleteUser, revertSoftDeleteUser } from "../../services/api" 
 import Swal from "sweetalert2"
+import AddUserModal from '../Modal/AddUserModal'
 
 const UsersTables = () => {
   const [user, serUser] = useState([])
+  const [showAddModal, setShowAddModal] = useState(false)
   const columns = ["Nombre", "Apellido", "Sobre-Nombre", "Teléfono", "Dirección", "Email", "Role", "Estado", "Acciones"]
 
   useEffect(() => {
@@ -70,13 +72,55 @@ const UsersTables = () => {
       }
     }
 
+  const handleRevertSoftDelete = async (userId) => {
+    const confirm = await Swal.fire({
+      title: "¿Reactivar Usuario?",
+      text: "Este Usuario se marcará como activo, no se eliminará permanentemente.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, reactivar",
+      cancelButtonText: "Cancelar"
+    })
+
+    if (confirm.isConfirmed) {
+      try {
+        await revertSoftDeleteUser(userId)
+        serUser((prev) =>
+          prev.map((p) => (p._id === userId ? { ...p, isActive: true } : p))
+        )
+        Swal.fire("Reactivado", "El Usuario ha sido reactivado.", "success")
+      } catch (error) {
+        Swal.fire("Error", "No se pudo reactivar el usuario.", "error")
+        console.log(error);
+      }
+    }
+  }
+
   return (
     <div className="flex flex-col bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
       {/* Header de la tabla */}
       <div className="bg-gradient-to-r from-slate-50 to-gray-50 px-6 py-4 border-b border-gray-200">
-        <h2 className="text-xl font-bold text-gray-800">Gestión de Usuarios</h2>
-        <p className="text-sm text-gray-600 mt-1">Lista completa de usuarios del sistema</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-gray-800">Gestión de Usuarios</h2>
+            <p className="text-sm text-gray-600 mt-1">Lista completa de usuarios del sistema</p>
+          </div>
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition-all duration-200 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            <PlusIcon className="w-5 h-5 mr-2" />
+            Crear Usuario
+          </button>
+        </div>
       </div>
+
+      {/* Modal de Crear Usuario */}
+      <AddUserModal
+        showModal={showAddModal}
+        setShowModal={setShowAddModal}
+        setUser={serUser}
+      />
 
       <div className="overflow-x-auto">
         <div className="min-w-full inline-block align-middle">
@@ -148,11 +192,23 @@ const UsersTables = () => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
-                        
-                        <button  onClick={() => handleSoftDelete(userData._id)} className="p-2.5 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 transition-all duration-200 hover:shadow-md group">
-                          <Delete className="w-4 h-4" />
-                        </button>
-                        
+                        {userData.isActive ? (
+                          <button 
+                            onClick={() => handleSoftDelete(userData._id)} 
+                            className="p-2.5 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 transition-all duration-200 hover:shadow-md group"
+                            title="Desactivar usuario"
+                          >
+                            <Delete className="w-4 h-4" />
+                          </button>
+                        ) : (
+                          <button 
+                            onClick={() => handleRevertSoftDelete(userData._id)} 
+                            className="p-2.5 rounded-xl bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-700 transition-all duration-200 hover:shadow-md group"
+                            title="Reactivar usuario"
+                          >
+                            <RotateCcw className="w-4 h-4" />
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>

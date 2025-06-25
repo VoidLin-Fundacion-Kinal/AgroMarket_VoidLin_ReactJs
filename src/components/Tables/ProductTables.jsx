@@ -1,11 +1,11 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { BoxIcon, Delete, Edit, PlusIcon } from "lucide-react"
-import { getProductsAll, softDeleteProduct } from "../../services/api"
+import { BoxIcon, Delete, Edit, PlusIcon, RotateCcw } from "lucide-react"
+import { getProductsAll, softDeleteProduct, revertSoftDeleteProduct } from "../../services/api"
 import Swal from "sweetalert2"
 import AddProductModal from './../Modal/addProductModal'
-import UpdateProductModal from './../Modal/updateProductModal' // Importa el nuevo componente
+import UpdateProductModal from './../Modal/updateProductModal'
 
 const ProductTables = () => {
   const [products, setProducts] = useState([])
@@ -45,6 +45,28 @@ const ProductTables = () => {
         Swal.fire("Desactivado", "El producto ha sido desactivado.", "success")
       } catch (error) {
         Swal.fire("Error", "No se pudo desactivar el producto.", "error")
+        console.log(error)
+      }
+    }
+  }
+
+  const handleRevertSoftDelete = async (productId) => {
+    const confirm = await Swal.fire({
+      title: "¿Reactivar producto?",
+      text: "Este producto volverá a estar activo en el sistema.",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Sí, reactivar",
+      cancelButtonText: "Cancelar",
+    })
+
+    if (confirm.isConfirmed) {
+      try {
+        await revertSoftDeleteProduct(productId)
+        setProducts((prev) => prev.map((p) => (p._id === productId ? { ...p, isActive: true } : p)))
+        Swal.fire("Reactivado", "El producto ha sido reactivado exitosamente.", "success")
+      } catch (error) {
+        Swal.fire("Error", "No se pudo reactivar el producto.", "error")
         console.log(error)
       }
     }
@@ -162,18 +184,32 @@ const ProductTables = () => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
-                        <button 
-                          onClick={() => handleEdit(product)}
-                          className="p-2.5 rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 transition-all duration-200 hover:shadow-md group"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => handleSoftDelete(product._id)}
-                          className="p-2.5 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 transition-all duration-200 hover:shadow-md group"
-                        >
-                          <Delete className="w-4 h-4" />
-                        </button>
+                        {product.isActive ? (
+                          <>
+                            <button 
+                              onClick={() => handleEdit(product)}
+                              className="p-2.5 rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 transition-all duration-200 hover:shadow-md group"
+                              title="Editar producto"
+                            >
+                              <Edit className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => handleSoftDelete(product._id)}
+                              className="p-2.5 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 transition-all duration-200 hover:shadow-md group"
+                              title="Desactivar producto"
+                            >
+                              <Delete className="w-4 h-4" />
+                            </button>
+                          </>
+                        ) : (
+                          <button
+                            onClick={() => handleRevertSoftDelete(product._id)}
+                            className="p-2.5 rounded-xl bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-700 transition-all duration-200 hover:shadow-md group"
+                            title="Reactivar producto - Volver a estado activo"
+                          >
+                            <RotateCcw className="w-4 h-4" />
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>

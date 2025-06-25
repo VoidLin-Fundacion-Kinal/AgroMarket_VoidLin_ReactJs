@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Swal from "sweetalert2"
 import { X, Tag, FileText } from "lucide-react"
-import { createCategory } from "../../services/api" // Asegúrate de tener este endpoint
+import { createCategory } from "../../services/api" 
 
 const AddCategoryModal = ({ showModal, setShowModal, setCategory }) => {
   const [loading, setLoading] = useState(false)
@@ -23,7 +23,7 @@ const AddCategoryModal = ({ showModal, setShowModal, setCategory }) => {
         Swal.fire("Categoría creada", "La categoría se ha guardado correctamente", "success")
         setShowModal(false)
         setCategory((prev) => [...prev, data.category])
-        e.target.reset() // Limpiar formulario
+        e.target.reset() 
       } else {
         Swal.fire("Error", data.message || "No se pudo crear la categoría", "error")
       }

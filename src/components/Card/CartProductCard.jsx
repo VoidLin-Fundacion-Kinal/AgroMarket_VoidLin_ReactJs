@@ -11,17 +11,14 @@ const CartProductCard = ({ item, quantity, onQuantityChange, onRemove, baseURL }
 
   const product = item.product
 
-  // Función simple para actualizar cantidad
   const handleQuantityChange = async (newQuantity) => {
     if (newQuantity < 1) return;
     
     setUpdating(true);
     
     try {
-      // Petición simple al backend
       await updateCartProductRequest(product._id, newQuantity);
       
-      // Actualizar el estado local si es necesario
       if (onQuantityChange) {
         onQuantityChange(product._id, newQuantity);
       }
@@ -33,21 +30,17 @@ const CartProductCard = ({ item, quantity, onQuantityChange, onRemove, baseURL }
     }
   };
 
-  // Generar opciones del dropdown
   const generateOptions = () => {
     const options = [];
     
-    // Siempre incluir del 1 al 10
     for (let i = 1; i <= 10; i++) {
       options.push(i);
     }
     
-    // Si la cantidad actual es mayor a 10, incluirla también
     if (quantity > 10) {
       options.push(quantity);
     }
     
-    // Ordenar las opciones
     return options.sort((a, b) => a - b);
   };
 

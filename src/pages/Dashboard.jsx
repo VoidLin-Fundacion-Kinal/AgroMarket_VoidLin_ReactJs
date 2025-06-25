@@ -1,20 +1,13 @@
-// src/pages/Dashboard.jsx
 import React, { useState } from 'react';
 import Sidebar from '../components/Sidebar';
-import MainContent from '../components/MainContent/MainContent';
-import Editar from '../components/UserEdit/UserEdit';
-import CartView from '../components/Cart/CartView'; // Asegúrate de que esta ruta sea correcta
-import BillsView from '../components/BillsUserView/BillsView';
-import NewPostView from '../components/NewPostView/NewPostView';
 import { Outlet } from 'react-router-dom';
 
 const Dashboard = () => {
-  const [activeView, setActiveView] = useState('home'); // 'home', 'edit', 'cart'
-  const userId = 1; // Ajusta esto según el ID real del usuario
+  const [activeView, setActiveView] = useState('home'); 
+  const userId = 1; 
 
   return (
     <>
-      {/* Estilos externos */}
       <link
         href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/1.2.0/tailwind.min.css"
         rel="stylesheet"

@@ -1,8 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Delete, Edit, Eye, FileText, Calendar, User, FileIcon } from 'lucide-react'
-import { getPostAll, softDeletePost } from "../../services/api" // ajusta la ruta según tu estructura
+import { Delete, Edit, Eye, FileText, Calendar, User, FileIcon, RotateCcw } from 'lucide-react'
+import { getPostAll, softDeletePost, revertSoftDeletePost } from "../../services/api" // ajusta la ruta según tu estructura
 import Swal from "sweetalert2"
 
 const BlogTables = () => {
@@ -68,6 +68,30 @@ const BlogTables = () => {
         Swal.fire("Error", "No se pudo desactivar el Post.", "error")
         console.log(error);
 
+      }
+    }
+  }
+
+  const handleRevertSoftDelete = async (postId) => {
+    const confirm = await Swal.fire({
+      title: "¿Reactivar Post?",
+      text: "Este Post volverá a estar activo y visible para los usuarios.",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Sí, reactivar",
+      cancelButtonText: "Cancelar"
+    })
+
+    if (confirm.isConfirmed) {
+      try {
+        await revertSoftDeletePost(postId)
+        setPost((prev) =>
+          prev.map((p) => (p._id === postId ? { ...p, isActive: true } : p))
+        )
+        Swal.fire("Reactivado", "El Post ha sido reactivado exitosamente.", "success")
+      } catch (error) {
+        Swal.fire("Error", "No se pudo reactivar el Post.", "error")
+        console.log(error);
       }
     }
   }
@@ -160,15 +184,23 @@ const BlogTables = () => {
                     <td className="px-6 py-4">{getStatusBadge(postItem.isActive)}</td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
-
-
-                        <button
-                        onClick={() => handleSoftDelete(postItem._id)}
-                          title="Eliminar post"
-                          className="p-2.5 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 transition-all duration-200 hover:shadow-md group"
-                        >
-                          <Delete className="w-4 h-4" />
-                        </button>
+                        {postItem.isActive ? (
+                          <button
+                            onClick={() => handleSoftDelete(postItem._id)}
+                            title="Desactivar post"
+                            className="p-2.5 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 transition-all duration-200 hover:shadow-md group"
+                          >
+                            <Delete className="w-4 h-4" />
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => handleRevertSoftDelete(postItem._id)}
+                            title="Reactivar post"
+                            className="p-2.5 rounded-xl bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-700 transition-all duration-200 hover:shadow-md group"
+                          >
+                            <RotateCcw className="w-4 h-4" />
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>

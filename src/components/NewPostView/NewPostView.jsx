@@ -122,7 +122,7 @@ const NewPostView = ({ onCancel }) => {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Title Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+              <label className=" text-sm font-medium text-gray-700 mb-2 flex items-center">
                 <FileText className="w-4 h-4 mr-2 text-[#244933]" />
                 Título de la Publicación
               </label>
@@ -138,7 +138,7 @@ const NewPostView = ({ onCancel }) => {
 
             {/* Description Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+              <label className=" text-sm font-medium text-gray-700 mb-2 flex items-center">
                 <FileText className="w-4 h-4 mr-2 text-[#244933]" />
                 Descripción
               </label>
@@ -154,7 +154,7 @@ const NewPostView = ({ onCancel }) => {
 
             {/* Address Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+              <label className=" text-sm font-medium text-gray-700 mb-2 flex items-center">
                 <MapPin className="w-4 h-4 mr-2 text-[#244933]" />
                 Dirección
               </label>
@@ -170,7 +170,7 @@ const NewPostView = ({ onCancel }) => {
 
             {/* Images Upload */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+              <label className=" text-sm font-medium text-gray-700 mb-2 flex items-center">
                 <Image className="w-4 h-4 mr-2 text-[#244933]" />
                 Imágenes
               </label>
@@ -240,8 +240,10 @@ const NewPostView = ({ onCancel }) => {
                   </>
                 ) : (
                   <>
-                    <PlusCircle className="w-4 h-4 mr-2" />
-                    Publicar
+                    <div className='flex items-center bg-amber-950 text-white rounded-lg px-4 py-2'>
+                      <PlusCircle className="w-4 h-4 mr-2" />
+                      Publicar
+                    </div>
                   </>
                 )}
               </button>

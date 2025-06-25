@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ProductCard } from './../../components/Card/ProductCard.jsx';
 import { ProductModal } from './../../components/Modal/ProductModal.jsx';
-import { getProductsRequest } from './../../services/api.js'; // Ajusta la ruta si es necesario
+import { getProductsRequest } from './../../services/api.js'; 
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 
 const CatalogProducts = () => {
@@ -10,7 +10,6 @@ const CatalogProducts = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
-  // Estados para paginación
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(12);
 
@@ -18,6 +17,7 @@ const CatalogProducts = () => {
     const fetchProducts = async () => {
       try {
         const data = await getProductsRequest();
+        console.log(data);
         setProducts(data.products || []);
       } catch (err) {
         setError('Error cargando productos');
@@ -36,13 +36,11 @@ const CatalogProducts = () => {
     setSelectedProduct(null);
   };
 
-  // Lógica de paginación
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
   const totalPages = Math.ceil(products.length / productsPerPage);
 
-  // Funciones de navegación
   const goToPage = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -63,7 +61,6 @@ const CatalogProducts = () => {
     setCurrentPage(prev => Math.min(prev + 1, totalPages));
   };
 
-  // Generar números de página para mostrar
   const getPageNumbers = () => {
     const pageNumbers = [];
     const maxVisiblePages = 5;
@@ -120,7 +117,6 @@ const CatalogProducts = () => {
     <section className="min-h-screen p-6 bg-gray-100">
       <h1 className="text-3xl font-bold mb-6 text-center text-green-700">Nuestros Productos</h1>
       
-      {/* Información de paginación */}
       <div className="mb-6 text-center">
         <p className="text-gray-600">
           Mostrando {indexOfFirstProduct + 1} - {Math.min(indexOfLastProduct, products.length)} de {products.length} productos
@@ -133,17 +129,14 @@ const CatalogProducts = () => {
         </div>
       ) : (
         <>
-          {/* Grid de productos */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
             {currentProducts.map((product) => (
               <ProductCard key={product._id} product={product} onClick={handleProductClick} />
             ))}
           </div>
 
-          {/* Controles de paginación */}
           {totalPages > 1 && (
             <div className="flex items-center justify-center space-x-2">
-              {/* Botón Primera Página */}
               <button
                 onClick={goToFirstPage}
                 disabled={currentPage === 1}
@@ -153,7 +146,6 @@ const CatalogProducts = () => {
                 <ChevronsLeft className="w-5 h-5" />
               </button>
 
-              {/* Botón Página Anterior */}
               <button
                 onClick={goToPreviousPage}
                 disabled={currentPage === 1}
@@ -163,7 +155,6 @@ const CatalogProducts = () => {
                 <ChevronLeft className="w-5 h-5" />
               </button>
 
-              {/* Números de página */}
               <div className="flex items-center space-x-1">
                 {getPageNumbers().map((pageNumber, index) => (
                   <button
@@ -182,8 +173,7 @@ const CatalogProducts = () => {
                   </button>
                 ))}
               </div>
-
-              {/* Botón Página Siguiente */}
+                
               <button
                 onClick={goToNextPage}
                 disabled={currentPage === totalPages}
@@ -193,7 +183,6 @@ const CatalogProducts = () => {
                 <ChevronRight className="w-5 h-5" />
               </button>
 
-              {/* Botón Última Página */}
               <button
                 onClick={goToLastPage}
                 disabled={currentPage === totalPages}
@@ -205,7 +194,6 @@ const CatalogProducts = () => {
             </div>
           )}
 
-          {/* Información adicional */}
           <div className="mt-4 text-center text-sm text-gray-500">
             Página {currentPage} de {totalPages}
           </div>

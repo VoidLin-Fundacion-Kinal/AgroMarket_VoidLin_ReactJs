@@ -1,28 +1,32 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { BoxIcon, Delete, Edit } from "lucide-react"
-import { getInventoryAll } from "../../services/api" // ajusta la ruta según tu estructura
+import { BoxIcon, Delete, Edit, Plus } from "lucide-react"
+import { getInventoryAll } from "../../services/api" 
+import AddInventoryMovementModal from "../Modal/AddInventoryMovementModal"
 
 const InventoryTables = () => {
   const [inventory, setInventory] = useState([])
+  const [showModal, setShowModal] = useState(false)
   const columns = ["Producto", "Cantidad", "Tipo de Movimiento", "Estado"]
 
-  useEffect(() => {
-    const fetchInventory = async () => {
-      try {
-        const data = await getInventoryAll()
-        setInventory(data)
-      } catch (error) {
-        console.error("Error cargando Inventario:", error)
-      }
+  const fetchInventory = async () => {
+    try {
+      const data = await getInventoryAll()
+      setInventory(data)
+    } catch (error) {
+      console.error("Error cargando Inventario:", error)
     }
+  }
 
+  useEffect(() => {
     fetchInventory()
   }, [])
 
   const getMovementBadge = (inputType) => {
     const movementColors = {
+      entry: "bg-green-100 text-green-800 border-green-200",
+      exit: "bg-red-100 text-red-800 border-red-200",
       entrada: "bg-green-100 text-green-800 border-green-200",
       salida: "bg-red-100 text-red-800 border-red-200",
       ajuste: "bg-yellow-100 text-yellow-800 border-yellow-200",
@@ -33,6 +37,8 @@ const InventoryTables = () => {
     const colorClass = movementColors[inputType?.toLowerCase()] || "bg-gray-100 text-gray-800 border-gray-200"
 
     const icons = {
+      entry: "↗",
+      exit: "↙",
       entrada: "↗",
       salida: "↙",
       ajuste: "⚖",
@@ -42,24 +48,29 @@ const InventoryTables = () => {
 
     const icon = icons[inputType?.toLowerCase()] || "•"
 
+    const displayText = {
+      entry: "Entrada",
+      exit: "Salida",
+    }[inputType?.toLowerCase()] || inputType
+
     return (
       <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${colorClass}`}>
         <span className="mr-1">{icon}</span>
-        {inputType}
+        {displayText}
       </span>
     )
   }
 
   const getQuantityDisplay = (amount, inputType) => {
-    const isPositive = inputType?.toLowerCase() === "entrada"
+    const isPositive = inputType?.toLowerCase() === "entry" || inputType?.toLowerCase() === "entrada"
     return (
       <div className="flex items-center">
         <span
           className={`text-sm font-bold ${
-            isPositive ? "text-green-600" : inputType?.toLowerCase() === "salida" ? "text-red-600" : "text-gray-900"
+            isPositive ? "text-green-600" : inputType?.toLowerCase() === "exit" || inputType?.toLowerCase() === "salida" ? "text-red-600" : "text-gray-900"
           }`}
         >
-          {isPositive ? "+" : inputType?.toLowerCase() === "salida" ? "-" : ""}
+          {isPositive ? "+" : inputType?.toLowerCase() === "exit" || inputType?.toLowerCase() === "salida" ? "-" : ""}
           {amount}
         </span>
         <span className="text-xs text-gray-500 ml-1">unidades</span>
@@ -71,8 +82,19 @@ const InventoryTables = () => {
     <div className="flex flex-col bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
       {/* Header de la tabla */}
       <div className="bg-gradient-to-r from-slate-50 to-gray-50 px-6 py-4 border-b border-gray-200">
-        <h2 className="text-xl font-bold text-gray-800">Gestión de Inventario</h2>
-        <p className="text-sm text-gray-600 mt-1">Registro de movimientos y control de stock</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-gray-800">Gestión de Inventario</h2>
+            <p className="text-sm text-gray-600 mt-1">Registro de movimientos y control de stock</p>
+          </div>
+          <button
+            onClick={() => setShowModal(true)}
+            className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white rounded-xl font-semibold transition-all duration-200 hover:shadow-lg transform hover:scale-[1.02]"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Crear Movimiento</span>
+          </button>
+        </div>
       </div>
 
       <div className="overflow-x-auto">
@@ -161,13 +183,20 @@ const InventoryTables = () => {
               <span className="text-gray-400">|</span>
               <span>Activos: {inventory.filter((i) => i.isActive).length}</span>
               <span className="text-gray-400">|</span>
-              <span>Entradas: {inventory.filter((i) => i.inputType?.toLowerCase() === "entrada").length}</span>
-              <span>Salidas: {inventory.filter((i) => i.inputType?.toLowerCase() === "salida").length}</span>
+              <span>Entradas: {inventory.filter((i) => i.inputType?.toLowerCase() === "entry" || i.inputType?.toLowerCase() === "entrada").length}</span>
+              <span>Salidas: {inventory.filter((i) => i.inputType?.toLowerCase() === "exit" || i.inputType?.toLowerCase() === "salida").length}</span>
             </div>
             <div className="text-xs text-gray-500">Última actualización: {new Date().toLocaleString("es-ES")}</div>
           </div>
         </div>
       )}
+
+      {/* Modal para crear movimiento de inventario */}
+      <AddInventoryMovementModal 
+        showModal={showModal} 
+        setShowModal={setShowModal} 
+        setInventory={setInventory}
+      />
     </div>
   )
 }

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Swal from "sweetalert2"
 import { X, Tag, FileText, Check } from "lucide-react"
-import { updateCategory } from "../../services/api" // Asegúrate de tener este endpoint
+import { updateCategory } from "../../services/api" 
 
 const UpdateCategoryModal = ({ showModal, setShowModal, setCategories, categoryToEdit }) => {
   const [loading, setLoading] = useState(false)
@@ -12,7 +12,6 @@ const UpdateCategoryModal = ({ showModal, setShowModal, setCategories, categoryT
     description: ''
   })
 
-  // Inicializar los valores del formulario cuando cambia la categoría a editar
   useEffect(() => {
     if (categoryToEdit) {
       setFormData({

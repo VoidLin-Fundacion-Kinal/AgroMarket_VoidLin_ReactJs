@@ -1,4 +1,3 @@
-// src/hooks/useUserBills.js
 import { useEffect, useState } from 'react';
 import { getBillsByUser } from '../services/api';
 

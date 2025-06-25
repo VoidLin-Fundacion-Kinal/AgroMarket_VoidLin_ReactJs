@@ -1,8 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Building2Icon, Delete, Edit, PlusIcon } from "lucide-react"
-import { getProvidersAll, softDeleteProvider, updateProvider } from "../../services/api"
+import { Building2Icon, Delete, Edit, PlusIcon, RotateCcw } from "lucide-react"
+import { getProvidersAll, softDeleteProvider, updateProvider, revertSoftDeleteProvider } from "../../services/api"
 import Swal from "sweetalert2"
 import AddProviderModal from "../Modal/addProviderModal"
 import { X, Building2, FileText, Mail, Phone, Package, User, Check } from "lucide-react"
@@ -115,6 +115,30 @@ const ProviderTables = () => {
         Swal.fire("Desactivado", "El Proveedor ha sido desactivado.", "success")
       } catch (error) {
         Swal.fire("Error", "No se pudo desactivar el proveedor.", "error")
+        console.log(error)
+      }
+    }
+  }
+
+  const handleRevertSoftDelete = async (providerId) => {
+    const confirm = await Swal.fire({
+      title: "¿Reactivar proveedor?",
+      text: "Este proveedor volverá a estar activo en el sistema.",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Sí, reactivar",
+      cancelButtonText: "Cancelar",
+    })
+
+    if (confirm.isConfirmed) {
+      try {
+        await revertSoftDeleteProvider(providerId)
+        setProviders(prev => prev.map(p => 
+          p._id === providerId ? { ...p, isActive: true } : p
+        ))
+        Swal.fire("Reactivado", "El proveedor ha sido reactivado exitosamente.", "success")
+      } catch (error) {
+        Swal.fire("Error", "No se pudo reactivar el proveedor.", "error")
         console.log(error)
       }
     }
@@ -366,18 +390,32 @@ const ProviderTables = () => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
-                        <button 
-                          onClick={() => handleEditClick(provider)}
-                          className="p-2.5 rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 transition-all duration-200 hover:shadow-md group"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button 
-                          onClick={() => handleSoftDelete(provider._id)} 
-                          className="p-2.5 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 transition-all duration-200 hover:shadow-md group"
-                        >
-                          <Delete className="w-4 h-4" />
-                        </button>
+                        {provider.isActive ? (
+                          <>
+                            <button 
+                              onClick={() => handleEditClick(provider)}
+                              className="p-2.5 rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 transition-all duration-200 hover:shadow-md group"
+                              title="Editar proveedor"
+                            >
+                              <Edit className="w-4 h-4" />
+                            </button>
+                            <button 
+                              onClick={() => handleSoftDelete(provider._id)} 
+                              className="p-2.5 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 transition-all duration-200 hover:shadow-md group"
+                              title="Desactivar proveedor"
+                            >
+                              <Delete className="w-4 h-4" />
+                            </button>
+                          </>
+                        ) : (
+                          <button
+                            onClick={() => handleRevertSoftDelete(provider._id)}
+                            className="p-2.5 rounded-xl bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-700 transition-all duration-200 hover:shadow-md group"
+                            title="Reactivar proveedor - Volver a estado activo"
+                          >
+                            <RotateCcw className="w-4 h-4" />
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>

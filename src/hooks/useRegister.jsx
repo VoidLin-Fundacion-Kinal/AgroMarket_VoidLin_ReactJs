@@ -6,7 +6,6 @@ export const useRegister = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
 
-  // Cambiar a un único parámetro objeto
   const register = async (userData) => {
     setIsLoading(true);
     setError(false);

@@ -1,13 +1,52 @@
-import { CalendarIcon, FileIcon, MapPinIcon } from "lucide-react"
+import { CalendarIcon, FileIcon, MapPinIcon, Trash2, Edit } from "lucide-react"
 import useUserPosts from "../../hooks/useUserPosts"
+import { softDeletePost } from "../../services/api"
+import Swal from "sweetalert2"
 
 const MainContent = () => {
-  const { posts, loading, error } = useUserPosts()
+  const { posts, loading, error, refetch } = useUserPosts()
   const baseURL = "http://localhost:2003/images/postImages/"
 
-  // Obtener el usuario desde localStorage
   const storedUser = typeof window !== "undefined" ? localStorage.getItem("user") : null
   const user = storedUser ? JSON.parse(storedUser) : null
+
+  const handleDeletePost = async (postId, postTitle) => {
+    const confirm = await Swal.fire({
+      title: "¿Eliminar publicación?",
+      text: `¿Estás seguro de que quieres eliminar "${postTitle}"? Esta acción no se puede deshacer.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+      reverseButtons: true
+    })
+
+    if (confirm.isConfirmed) {
+      try {
+        await softDeletePost(postId)
+        
+        Swal.fire({
+          title: "¡Eliminado!",
+          text: "La publicación ha sido eliminada exitosamente.",
+          icon: "success",
+          confirmButtonText: "Aceptar"
+        })
+
+        // Refetch posts to update the list
+        refetch()
+      } catch (error) {
+        console.error("Error al eliminar la publicación:", error)
+        Swal.fire({
+          title: "Error",
+          text: "No se pudo eliminar la publicación. Inténtalo de nuevo.",
+          icon: "error",
+          confirmButtonText: "Aceptar"
+        })
+      }
+    }
+  }
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-6">
@@ -57,7 +96,12 @@ const MainContent = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {posts.slice(0, 100).map((post, idx) => (
-              <PostCard key={idx} post={post} baseURL={baseURL} />
+              <PostCard 
+                key={idx} 
+                post={post} 
+                baseURL={baseURL} 
+                onDelete={handleDeletePost}
+              />
             ))}
           </div>
         </div>
@@ -79,8 +123,20 @@ const Card = ({ title, value, bgColor, textColor = "text-white" }) => (
   </div>
 )
 
-const PostCard = ({ post, baseURL }) => (
-  <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-[#06a43d] group">
+const PostCard = ({ post, baseURL, onDelete }) => (
+  <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-[#06a43d] group relative">
+    {/* Action Buttons - Always visible */}
+    <div className="absolute top-3 right-3 z-10 flex space-x-2">
+      <button
+        onClick={() => onDelete(post._id, post.title)}
+        className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow-lg transition-all duration-200 hover:scale-110 transform"
+        title="Eliminar publicación"
+      >
+        <Trash2 className="w-4 h-4" />
+      </button>
+      
+    </div>
+
     {/* Image Section */}
     {post.images && post.images.length > 0 && (
       <div className="relative overflow-hidden">
@@ -123,7 +179,19 @@ const PostCard = ({ post, baseURL }) => (
         </div>
       </div>
 
-      
+      {/* Status Badge */}
+      <div className="mt-4 pt-4 border-t border-gray-100">
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+          post.isActive 
+            ? "bg-green-100 text-green-800" 
+            : "bg-red-100 text-red-800"
+        }`}>
+          <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${
+            post.isActive ? "bg-green-400" : "bg-red-400"
+          }`}></span>
+          {post.isActive ? "Activo" : "Eliminado"}
+        </span>
+      </div>
     </div>
   </div>
 )

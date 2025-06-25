@@ -15,6 +15,8 @@ import {
   Tag,
   Upload,
   Check,
+  Trash2,
+  ImageIcon,
 } from "lucide-react"
 
 const AddProductModal = ({ showModal, setShowModal, setProducts }) => {
@@ -28,6 +30,9 @@ const AddProductModal = ({ showModal, setShowModal, setProducts }) => {
 
   const [openCategory, setOpenCategory] = useState(false)
   const [openProvider, setOpenProvider] = useState(false)
+
+  const [selectedImage, setSelectedImage] = useState(null)
+  const [imagePreview, setImagePreview] = useState(null)
 
   useEffect(() => {
     if (!showModal) return
@@ -56,6 +61,42 @@ const AddProductModal = ({ showModal, setShowModal, setProducts }) => {
     setShowUpdateModal(true);
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        Swal.fire("Error", "El archivo es demasiado grande. Máximo 5MB.", "error")
+        return
+      }
+      if (!file.type.startsWith("image/")) {
+        Swal.fire("Error", "Por favor selecciona un archivo de imagen válido.", "error")
+        return
+      }
+      setSelectedImage(file)
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        setImagePreview(e.target.result)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const removeImage = () => {
+    setSelectedImage(null)
+    setImagePreview(null)
+    const fileInput = document.querySelector('input[name="productImage"]')
+    if (fileInput) {
+      fileInput.value = ""
+    }
+  }
+
+  useEffect(() => {
+    if (!showModal) {
+      setSelectedImage(null)
+      setImagePreview(null)
+    }
+  }, [showModal])
+
   const handleCreateProduct = async (e) => {
     e.preventDefault()
     if (!selectedCategory || !selectedProvider) {
@@ -66,6 +107,10 @@ const AddProductModal = ({ showModal, setShowModal, setProducts }) => {
     const formData = new FormData(e.target)
     formData.set("category", selectedCategory._id)
     formData.set("provider", selectedProvider._id)
+
+    if (selectedImage) {
+      formData.set("productImage", selectedImage)
+    }
 
     try {
       setLoading(true)
@@ -102,8 +147,6 @@ const AddProductModal = ({ showModal, setShowModal, setProducts }) => {
     }
   }
 
-
-
   if (!showModal) return null
 
   return (
@@ -122,7 +165,13 @@ const AddProductModal = ({ showModal, setShowModal, setProducts }) => {
               </div>
             </div>
             <button
-              onClick={() => setShowModal(false)}
+              onClick={() => {
+                setShowModal(false)
+                setSelectedImage(null)
+                setImagePreview(null)
+                const fileInput = document.querySelector('input[name="productImage"]')
+                if (fileInput) fileInput.value = ""
+              }}
               className="w-8 h-8 bg-white/20 hover:bg-white/30 rounded-lg flex items-center justify-center transition-all duration-200 group"
               disabled={loading}
             >
@@ -318,18 +367,50 @@ const AddProductModal = ({ showModal, setShowModal, setProducts }) => {
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-gray-700">Imagen del producto</label>
                 <div className="relative">
-                  <div className="flex items-center justify-center w-full">
-                    <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-200">
-                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                        <Upload className="w-8 h-8 mb-2 text-gray-400" />
-                        <p className="mb-2 text-sm text-gray-500">
-                          <span className="font-semibold">Haz clic para subir</span> o arrastra y suelta
-                        </p>
-                        <p className="text-xs text-gray-500">PNG, JPG o JPEG (MAX. 5MB)</p>
+                  {!imagePreview ? (
+                    <div className="flex items-center justify-center w-full">
+                      <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-200">
+                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                          <Upload className="w-8 h-8 mb-2 text-gray-400" />
+                          <p className="mb-2 text-sm text-gray-500">
+                            <span className="font-semibold">Haz clic para subir</span> o arrastra y suelta
+                          </p>
+                          <p className="text-xs text-gray-500">PNG, JPG o JPEG (MAX. 5MB)</p>
+                        </div>
+                        <input
+                          name="productImage"
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={handleImageChange}
+                        />
+                      </label>
+                    </div>
+                  ) : (
+                    <div className="relative">
+                      <div className="flex items-center justify-center w-full h-48 border-2 border-blue-300 border-dashed rounded-xl bg-blue-50">
+                        <img
+                          src={imagePreview || "/placeholder.svg"}
+                          alt="Vista previa del producto"
+                          className="max-h-44 max-w-full object-contain rounded-lg"
+                        />
                       </div>
-                      <input type="file" name="productImage" className="hidden" accept="image/*" />
-                    </label>
-                  </div>
+                      <div className="absolute top-2 right-2 flex space-x-2">
+                        <button
+                          type="button"
+                          onClick={removeImage}
+                          className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors duration-200"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                      <div className="mt-2 flex items-center space-x-2 text-sm text-blue-700 bg-blue-100 px-3 py-2 rounded-lg">
+                        <ImageIcon className="w-4 h-4" />
+                        <span className="font-medium">{selectedImage?.name}</span>
+                        <span className="text-blue-600">({(selectedImage?.size / 1024 / 1024).toFixed(2)} MB)</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -337,7 +418,13 @@ const AddProductModal = ({ showModal, setShowModal, setProducts }) => {
               <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-100">
                 <button
                   type="button"
-                  onClick={() => setShowModal(false)}
+                  onClick={() => {
+                    setShowModal(false)
+                    setSelectedImage(null)
+                    setImagePreview(null)
+                    const fileInput = document.querySelector('input[name="productImage"]')
+                    if (fileInput) fileInput.value = ""
+                  }}
                   className="flex-1 px-6 py-3 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl font-semibold transition-all duration-200 hover:shadow-md"
                   disabled={loading}
                 >

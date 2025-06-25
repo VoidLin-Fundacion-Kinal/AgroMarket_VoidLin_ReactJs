@@ -6,17 +6,14 @@ const CartView = () => {
   const { cart, loading, error } = useUserCart();
   const UrlImage = 'http://localhost:2003/images/productsImages/';
   
-  // Estados para paginación
   const [currentPage, setCurrentPage] = useState(1);
   const [ordersPerPage] = useState(10);
 
-  // Lógica de paginación
   const indexOfLastOrder = currentPage * ordersPerPage;
   const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
   const currentOrders = cart ? cart.slice(indexOfFirstOrder, indexOfLastOrder) : [];
   const totalPages = cart ? Math.ceil(cart.length / ordersPerPage) : 0;
 
-  // Funciones de navegación
   const goToPage = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -37,7 +34,6 @@ const CartView = () => {
     setCurrentPage(prev => Math.min(prev + 1, totalPages));
   };
 
-  // Generar números de página para mostrar
   const getPageNumbers = () => {
     const pageNumbers = [];
     const maxVisiblePages = 5;
