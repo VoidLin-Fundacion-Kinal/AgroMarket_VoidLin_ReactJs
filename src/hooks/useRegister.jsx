@@ -18,12 +18,6 @@ export const useRegister = () => {
         throw response.error;
       }
 
-      Swal.fire({
-        icon: 'success',
-        title: '¡Registrado!',
-        text: 'Usuario creado satisfactoriamente, Inicie Sesión. 🙌',
-      });
-
       setIsLoading(false);
       return response;
       
@@ -33,11 +27,14 @@ export const useRegister = () => {
 
       if (err?.response?.data?.errors && Array.isArray(err.response.data.errors)) {
         const errorsList = err.response.data.errors.map(e => e.msg || JSON.stringify(e)).join('\n');
-        return Swal.fire({
+        await Swal.fire({
           icon: 'error',
           title: 'Errores de validación',
-          html: errorsList.replace(/\n/g, '<br/>'),
+          html: `<div class="text-left">${errorsList.replace(/\n/g, '<br/>')}</div>`,
+          confirmButtonText: 'Entendido',
+          confirmButtonColor: '#3085d6'
         });
+        throw new Error('Errores de validación encontrados');
       }
 
       const message =
@@ -45,11 +42,15 @@ export const useRegister = () => {
         err?.message ||
         'Error general al intentar registrar el usuario. Intente de nuevo.';
 
-      Swal.fire({
+      await Swal.fire({
         icon: 'error',
-        title: 'Error',
+        title: 'Error al registrar',
         text: message,
+        confirmButtonText: 'Entendido',
+        confirmButtonColor: '#3085d6'
       });
+      
+      throw new Error(message);
     }
   };
 

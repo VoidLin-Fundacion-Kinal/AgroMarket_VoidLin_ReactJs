@@ -24,6 +24,8 @@ import NewPostView from './components/NewPostView/NewPostView.jsx';
 import Editar from './components/UserEdit/UserEdit.jsx';
 import MainContent from './components/MainContent/MainContent.jsx';
 import InventoryTables from './components/Tables/InventoryTables.jsx';
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute.jsx';
+import AccessDenied from './components/AccessDenied/AccessDenied.jsx';
 
 
 
@@ -58,8 +60,12 @@ const navigate = useNavigate();
         <Route path="/auth/login" element={<AuthPages />} />
         <Route path="/auth/register" element={<AuthPagesRegister />} />
 
-        {/* Dashboard admin */}
-        <Route path="/dashboardAdmin" element={<Layout2 />}>
+        {/* Dashboard admin - Rutas protegidas */}
+        <Route path="/dashboardAdmin" element={
+          <ProtectedRoute requiredRole="ADMINPLATAFORM">
+            <Layout2 />
+          </ProtectedRoute>
+        }>
           <Route index element={<ContentHomeDashAdmin />} />
           <Route path='products' element={<ProductTables/>}/>
           <Route path='providers' element={<ProviderTables/>}/>
@@ -72,6 +78,9 @@ const navigate = useNavigate();
         </Route>
 
         <Route path='/account/settings' element={<Dashboard />}/>
+
+        {/* Ruta de acceso denegado */}
+        <Route path="/access-denied" element={<AccessDenied />} />
 
         {/* Ruta 404 */}
         <Route path="*" element={<NotFound />} />

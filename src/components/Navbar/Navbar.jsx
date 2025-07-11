@@ -30,6 +30,36 @@ const Navbar = () => {
     checkAuthStatus()
   }, [])
 
+  // Cerrar menú cuando se hace clic fuera
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const menuContainer = document.getElementById('user-menu-container')
+      const menuButton = document.getElementById('user-menu-button')
+      const mobileMenuContainer = document.getElementById('mobile-menu-container')
+      const mobileMenuButton = document.getElementById('mobile-menu-button')
+      
+      // Cerrar menú de usuario
+      if (showMenu && menuContainer && menuButton) {
+        if (!menuContainer.contains(event.target) && !menuButton.contains(event.target)) {
+          setShowMenu(false)
+        }
+      }
+      
+      // Cerrar menú móvil
+      if (showMobileMenu && mobileMenuContainer && mobileMenuButton) {
+        if (!mobileMenuContainer.contains(event.target) && !mobileMenuButton.contains(event.target)) {
+          setShowMobileMenu(false)
+        }
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showMenu, showMobileMenu])
+
   const checkAuthStatus = () => {
     const token = localStorage.getItem("token")
     if (token) {
@@ -132,6 +162,7 @@ const Navbar = () => {
           {isLoggedIn ? (
             <div className="relative">
               <button
+                id="user-menu-button"
                 onClick={() => setShowMenu(!showMenu)}
                 className="group flex items-center focus:outline-none p-1 rounded-2xl bg-gradient-to-br from-green-100 via-emerald-100 to-green-100 hover:from-green-200 hover:via-emerald-200 hover:to-green-200 transition-all duration-300 transform hover:scale-110 shadow-lg hover:shadow-xl border border-green-200/50"
               >
@@ -143,7 +174,7 @@ const Navbar = () => {
               </button>
 
               {showMenu && (
-                <div className="absolute right-0 mt-3 w-64 bg-white border-2 border-green-200 shadow-2xl rounded-2xl z-50 overflow-hidden">
+                <div id="user-menu-container" className="absolute right-0 mt-3 w-64 bg-white border-2 border-green-200 shadow-2xl rounded-2xl z-50 overflow-hidden">
                   <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 border-b border-green-200">
                     <div className="flex items-center">
                       <img
@@ -200,6 +231,7 @@ const Navbar = () => {
         </div>
 
         <button
+          id="mobile-menu-button"
           className="md:hidden flex items-center p-3 rounded-2xl bg-gradient-to-br from-green-100 to-emerald-100 hover:from-green-200 hover:to-emerald-200 transition-all duration-300 shadow-lg"
           onClick={() => setShowMobileMenu(!showMobileMenu)}
         >
@@ -207,7 +239,7 @@ const Navbar = () => {
         </button>
 
         {showMobileMenu && (
-          <div className="w-full mt-4 md:hidden bg-gradient-to-br from-white to-green-50/30 rounded-2xl p-6 border-2 border-green-200/50 shadow-xl backdrop-blur-sm">
+          <div id="mobile-menu-container" className="w-full mt-4 md:hidden bg-gradient-to-br from-white to-green-50/30 rounded-2xl p-6 border-2 border-green-200/50 shadow-xl backdrop-blur-sm">
             <div className="flex flex-col items-start space-y-4">
               <Link 
                 to="/catalog" 

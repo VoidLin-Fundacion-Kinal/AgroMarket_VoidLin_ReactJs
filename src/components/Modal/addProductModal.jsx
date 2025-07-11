@@ -118,6 +118,8 @@ const AddProductModal = ({ showModal, setShowModal, setProducts }) => {
       if (data.success) {
         Swal.fire("Producto creado", "El producto se ha guardado correctamente", "success")
         setShowModal(false)
+        
+        // Add the populated product to the list
         setProducts((prev) => [...prev, data.product])
 
         e.target.reset()

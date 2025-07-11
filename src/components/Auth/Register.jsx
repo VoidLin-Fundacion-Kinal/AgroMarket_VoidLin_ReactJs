@@ -38,12 +38,14 @@ export const Register = ({ onSwitch }) => {
     try {
       await register(formData);
 
+      // Solo mostrar éxito si no hubo errores
       Swal.fire({
         icon: 'success',
         title: '¡Registro exitoso!',
         text: 'Usuario creado satisfactoriamente, Inicie sesión.',
       });
 
+      // Limpiar formulario solo si el registro fue exitoso
       setFormData({
         name: '',
         surname: '',
@@ -59,11 +61,8 @@ export const Register = ({ onSwitch }) => {
 
     } catch (error) {
       console.error('Error al registrar:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error al registrar',
-        text: error.message || 'Ocurrió un error al intentar registrar el usuario. Intente de nuevo.',
-      });
+      // No mostrar otro alert aquí porque el hook ya lo maneja
+      // Solo registrar el error en consola
     }
   };
 
